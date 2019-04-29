@@ -3,7 +3,7 @@
 ### 소제목
 본문 <br>
 *이탤릭체* **강조** <br>
-<u> 밑줄 </u> <br>
+<u>밑줄</u> <br>
 
 [구글링크](http://google.com)
 ![아이유 이미지](http://img.hani.co.kr/imgdb/resize/2015/1106/144671413868_20151106.JPG)
