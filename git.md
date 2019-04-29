@@ -154,6 +154,38 @@ working copy| cache | tree
  >> 원격 리파지토리에 push 를 한 상태에서 reset을 사용하면 reset 하기 이전으로 되돌리기 전까지는 push 할 수 없음 
      그래서 이미 push 한 코드라면 미련을 버리고 revert를 실행하여야 함
      
+<br>
+
+**원격 저장소 github**
+> 분산 버전 관리 툴인 깃(Git)을 사용하는 프로젝트를 지원하는 웹호스팅 서비스<br>
+> gui 제공, MS 인수<br>
+> 무료 계정도 비공개 저장소를 사용 가능하나 협업이 3명까지만 가능<br>
+
+등록 및 push
+```
+# git remote add origin  https://github.com/engineer-pjin/test.git
+# git remote -v
+origin  https://github.com/engineer-pjin/test.git (fetch)
+origin  https://github.com/engineer-pjin/test.git (push)
+
+# git push -u origin master 
+
+# git push
+```
+
+<br>
+
+git의 소스코드를 지역저장소로 가져오기
+```
+# git clone https://github.com/git/git.git [directory]
+```
+
+<br>
+
+pull
+```
+# git pull
+```
 
 <br><br>
 
