@@ -163,7 +163,7 @@ working copy| cache | tree
 
 등록 및 push
 ```
-# git remote add origin  https://github.com/engineer-pjin/test.git
+# git remote add origin  https://github.com/engineer-pjin/sre_component_foundation
 # git remote -v
 origin  https://github.com/engineer-pjin/test.git (fetch)
 origin  https://github.com/engineer-pjin/test.git (push)
@@ -186,6 +186,21 @@ pull
 ```
 # git pull
 ```
+
+<br>
+
+신규 서버에서 git pull을 하려면
+```
+# git init
+# git remote add origin  https://github.com/engineer-pjin/sre_component_foundation
+# git remote -v
+# git pull origin master
+Username for 'https://github.com': engineer-pjin
+Password for 'https://engineer-pjin@github.com':
+From https://github.com/engineer-pjin/sre_component_foundation
+ * branch            master     -> FETCH_HEAD
+```
+
 
 <br><br>
 
