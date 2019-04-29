@@ -628,3 +628,84 @@ test01.txt  test02.txt
 
 
 ```
+
+<br><br>
+
+## 더 알아보기 - branch
+> 개념을 익힌 후 실습은 필요 시 진행
+
++ **branch** : 모든 버전 관리 시스템은 브랜치를 지원한다. 개발을 하다 보면 코드를 여러 개로 복사해야 하는 일이 자주 생긴다. 코드를 통째로 복사하고 나서 원래 코드와는 상관없이 독립적으로 개발을 진행할 수 있는데, 이렇게 독립적으로 개발하는 것이 브랜치다.
++ 각 브랜치를 하나의 “실험실” 로 생각
+![](https://git-scm.com/book/en/v2/images/lr-branches-2.png)
+![](https://git-scm.com/book/en/v2/images/topic-branches-1.png)
+
+### CLI
+**생성 및 전환**
+
+```
+# git branch
+# git branch "새로운 브랜치 이름"
+# git branch -d
+# git branch -D
+> 병합하지 않은 브랜치를 강제 삭제할 때 
+# git checkout "전환하려는 브랜치 이름"
+> 브랜치를 전환(체크아웃)할 때, 그냥 log에 보이는 id를 넣는다면 그 버젼으로 돌아가기도 함
+# git checkout -b "생성하고 전환할 브랜치 이름"
+> 브랜치를 생성하고 전환까지 할 때 
+> 브랜치 변경에 따라 파일의 내용 및 신규/삭제 파일은 각 브랜치를 따라간다
+
+# git checkout [commit id]
+> 해당 커밋 상태로 돌아감
+
+# git log master..jin -p
+> 마스터에는 없고 jin에는 있는거
+# git diff master..jin
+
+> A 브랜치로 B 브랜치를 병합할 때 (master ← jin)
+# git checkout master
+# git merge jin
+```
+
+
+**branch CLI 그래프**
+
+```
+# git log --branches --decorate --graph
+* commit 6f26986f2c7235da8feaec06725461b7594f6234 (HEAD -> master)
+| Author: pjin <pjin.test>
+| Date:   Sun Jan 27 23:33:54 2019 +0900
+|
+|     v4
+|
+| * commit 17446713468c934dd28f3b3baae10ded71436ffa (jin)
+| | Author: pjin <pjin.test>
+| | Date:   Sun Jan 27 23:32:52 2019 +0900
+| |
+| |     v5
+| |
+| * commit d7b967ae9a54fa52299664edcaab9faba26823f1
+| | Author: pjin <pjin.test>
+| | Date:   Sun Jan 27 23:26:04 2019 +0900
+| |
+| |     v4
+| |
+| * commit 63701734c989279254121be9e9cc22bf55aee6b1
+|/  Author: pjin <pjin.test>
+|   Date:   Sun Jan 27 23:22:30 2019 +0900
+|
+|       v3
+|
+* commit 7f9444eb2dfd50b561b20a35fb52b706c5d87733
+  Author: pjin <pjin.test>
+  Date:   Sun Jan 27 23:10:26 2019 +0900
+```
+
+**merge conflict**
+
+> git merge 시 서로 다른 부분을 추가했으면 추가된 부분이 모두 합쳐짐<br>
+>> base, local, remote : 세 오브젝트에서 머지 내용 조절<br>
+> 같은 부분을 수정했나면 conflict 이 발생하고 해당 파일에 표시가 됨.. 그 표시되는 애를 수정하면 됨<br>
+
+
+>충돌이 생기면 아래와 같은 메시지 발생
+>>fix conflict and run "gir commit"
