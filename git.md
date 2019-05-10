@@ -88,7 +88,7 @@
 **commit 로그 확인**
 
 ```
-# git commit -am 'commit message'
+# git log
 ```
 
 <br>
@@ -152,7 +152,6 @@ working copy| cache | tree
 > revert를 실행하면 되돌리겠다는 기록을 남기고 기존 버전으로 돌리기<br>
  >> revert를 사용하여 해당 커밋의 내용만 되돌릴 수 있음, 즉 revert로 지정된 버전의 commit은 무효화<br>
  >> 원격 리파지토리에 push 를 한 상태에서 reset을 사용하면 reset 하기 이전으로 되돌리기 전까지는 push 할 수 없음 
-     그래서 이미 push 한 코드라면 미련을 버리고 revert를 실행하여야 함
      
 <br>
 
