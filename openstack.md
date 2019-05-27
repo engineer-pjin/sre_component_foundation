@@ -97,8 +97,8 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 + 3 + 2n Node 구성 : HAProxy, Pacemaker, Galera Cluster
 
 > *출처 : https://docs.openstack.org/ <br>
-> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_cont_network.svg)
-> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_com_network.svg)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_cont_network.jpg)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_com_network.jpg)
 
 <br><br>
 
