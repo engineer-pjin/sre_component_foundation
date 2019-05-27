@@ -1,6 +1,7 @@
 # openstack
 ## Openstack 상세
 ### + 정의
+
 + 오픈스택(OpenStack)은 **Open Infrastructure ** 형태의 클라우드 컴퓨팅 오픈소스 프로젝트 <br>
 + **As A Service** & **Software Defined** <br>
 + 2012년 창설된 비영리 단체인 **OpenStack Foundation**에서 유지, 보수하고 있으며 아파치 라이센스하에 배포<br>
@@ -96,8 +97,8 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 + 3 + 2n Node 구성 : HAProxy, Pacemaker, Galera Cluster
 
 > *출처 : https://docs.openstack.org/ <br>
-> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_cont_network.png)
-> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_com_network.png)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_cont_network.svg)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_com_network.svg)
 
 <br><br>
 
