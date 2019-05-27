@@ -34,7 +34,8 @@
 
 <br><br>
 
-### + Architecture - Component
+## OpenStack Architecture
+### + Architecture : Component
 #### 주요 Component 
 Service | Project Name | 비고
 :---:|:---:|:---|
@@ -52,15 +53,16 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 
 <br><br>
 
-### + Architecture - Design
+### + Architecture : Design
 + 다양한 Component의 조합으로 구성되는 **Modular Architecture** <br>
++ Component를 통해 Backend Tech.를 제어 <br>
 
 > *출처 : https://docs.openstack.org/ <br>
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openStack_logical_architecture.png)
 
 <br><br> 
 
-### + Architecture - Networking
+### + Architecture : Networking
 #### Network zones
 + Underlay : defined as the physical network switching infrastructure
 + Overlay : defined as any L3 connectivity between the cloud components 
@@ -75,12 +77,37 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 + North/South : traffic between the workload and all external networks
 
 > *출처 : https://docs.openstack.org/ <br>
-> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_dvr_network.png)
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_East_West_network.png)
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_North_South_network2.png)
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_North_South_network.png)
 
+<br><br>
+
+## HA 
+### + HA : SPOF
++ OpenStack 에서의 SPOF는? : 모든 Component 
++ 각 Component 별 HA 구성을 진행
++ 플랫폼의 규모에 따라 Performance sizing(Component 분리)과는 별개로 Component 별 복수 구성
 
 <br><br>
+
+### + HA : Management 
++ 전통적 방식의 Component A/S Cluster 구성 : DRBD, Pacemaker, Corosync
++ 3 + 2n Node 구성 : HAProxy, Pacemaker, Galera Cluster
+
+> *출처 : https://docs.openstack.org/ <br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_cont_network.png)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_ha_com_network.png)
+
+<br><br>
+
+### + HA : Network 
++ DVR(*Distributed Virtual Routing*) <br>
++- resides completely on the compute nodes for instances with a fixed or floating IP address using project networks on the same distributed virtual router<br>
++- 네트워크 노드에 집중되었던 Virtual Router 를 VM이 생성되는 각 Compute Node에 분산 배치<br>
+
+> *출처 : https://docs.openstack.org/ <br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_dvr_network.png)
+
 
 
