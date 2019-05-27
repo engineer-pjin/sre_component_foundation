@@ -4,6 +4,7 @@
 
 + 오픈스택(OpenStack)은 **Open Infrastructure ** 형태의 클라우드 컴퓨팅 오픈소스 프로젝트 <br>
 + **As A Service** & **Software Defined** <br>
++ 인프라의 추상화
 + 2012년 창설된 비영리 단체인 **OpenStack Foundation**에서 유지, 보수하고 있으며 아파치 라이센스하에 배포<br>
 + AMD, Intel, 캐노니컬, 수세 리눅스, Red Hat, Cisco , Dell, HP, IBM, NEC, VMWare, Yahoo등의 150개 이상의 회사가 이 프로젝트에 참가하고 있으며, 주로 리눅스 기반으로 운용과 개발이 이
 루어 지고 있음<br>
@@ -166,7 +167,18 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 + 인터럽트의 오버헤드를 줄이는 기술<br>
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/dpdk01.png)
 
+<br><br>
 
+## OpenStack의 방향성
+> 가상머신을 제공하는 플렛폼이 아닌 모든 인프라를 추상화 하고 서비스로 제공 
+
++ Airship : 오픈 인프라의 라이프 싸이클을 시작부터 끝까지 모두 관리 
++ Kata-Container : 표준 경량 VM 구현체 구축을 위한 오픈소스 프로젝트, 컨테이너 기술처럼 사용가능하게 구현하며 VM의 워크로드 격리
++ StarlingX : Wind River® Titanium Cloud R5 제품을 기반으로 한 완벽한 기능의 고성능 Edge Cloud 소프트웨어 스택
++ OpenStack-Helm : Kubernetes의 Helm Chart를 활용한 OpenStack의 설치와 운영
++ Magnum : 컨테이너 오케스트레이션 엔진을 프로비저닝, 스케일링 및 관리를 하기 위한 서비스 집합
+
+.. 계속
 
 
 
