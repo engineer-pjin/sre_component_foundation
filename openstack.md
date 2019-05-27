@@ -128,7 +128,7 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 
 > *출처 : https://ceph.com/ <br>
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/Ceph-diagram.png)
-> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/Ceph-stack.png)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/ceph-stack.png)
 
 <br><br>
 
