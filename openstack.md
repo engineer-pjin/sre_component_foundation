@@ -110,5 +110,66 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 > *출처 : https://docs.openstack.org/ <br>
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_dvr_network.png)
 
+<br><br>
+
+### + HA : Storage
+#### SDS (Software Defined Storage)<br>
++ Problem : Big & Many Data, Big & Many Data, Scale up Limit, Non Elastic
++ SDS’s Advantage : Scale Out, Elastic, Low Cost, Non lock-in, No limit on the machine
++ Examples : GlusterFS, Ceph, VMware Virtual SAN, EMC ScaleIO
+
+#### Ceph<br>
++ Block & Object Storage & filesystem Support
++ Monitor – Cluster Map & OSD 관리, 3+2N 형태의 HA 구성
++ OSD – data read & write, **Object 단위** data 저장, CRUSH Algorithm
++ Monitor는 Client에 Cluster Map을 전달하며 이를 통해 어떤 OSD Nodes 에서 read & write 할지 결정
+
+
+> *출처 : https://ceph.com/ <br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/Ceph-diagram.png)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/Ceph-stack.png)
+
+<br><br>
+
+## Performance Tuning 
+### + Performance Tuning : pci passthrough
++ 컴퓨트 노드의 물리적 PCI 장치를 인스턴스에서 액세스하고 직접 제어<br>
++- GPU, NIC, Disk, HBAA등의 pci 장치 연결 가능
+
+
+<br><br>
+
+### + Performance Tuning : SR-IOV<br>
++ Single Root I/O Virtualization
++ NIC를 hardware 수준에서 multiple separate physical PCIe devices로 가상화하여 제공<br>
++ 하나의 Physical Function (PF)에서 Virtual Function(VF)이라고 하는 가상 PCI 카드를 생성하여 Hypervisor의 기능을 사용하지 않고도 VM에게 network interface 제공 가능 <br>
++ near-native performance로서 para-virtualized drivers, emulated access 보다 성능적 우위<br>
+
+> *출처 : https://intel.com, https://www.redhat.com <br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/perf_sriov.png)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/perf_sriov2.png)
+
+
+### + Performance Tuning : DPDK
+#### Latency <br>
++ Openstack을 구성하는 많은 logical devices에 의해 Latency 가 발생하며 이는 Network에 기반<br>
++ Hypervisor 는 network에 최적화 되도록 설계되지 않음<br>
++ Device는 interrupt 를 유발하며 kernel space 영역과 user space 영역간의 mem copy 발생<br>
+
+> *출처 : https://intel.com <br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/dpdk00.png)
+
+#### Data Plan Developer Kit <br>
++ Data Plan Developer Kit <br>
++ 텔에서 개발한 고성능 패킷 처리 시스템 소프트웨어로 고속 패킷 처리를 위한 라이브러리와 드라이버의 집합<br>
+리눅스나 윈도우의 커널 대신에 네트워크 패킷을 처리하는 응용 프로그램 - PMD (Poll Mode Driver)을 제공하고 전용 CPU 코어를 할당하여 커널을 거치지 않고 네트워크 카드에 도착한 패킷을 직접 받아서 빠르게 처리<br>
++ 인터럽트의 오버헤드를 줄이는 기술<br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/dpdk01.png)
+
+
+
+
+
+
 
 
