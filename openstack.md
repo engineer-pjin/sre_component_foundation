@@ -75,8 +75,11 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 + North/South : traffic between the workload and all external networks
 
 > *출처 : https://docs.openstack.org/ <br>
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_dvr_network.png)
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_East_West_network.png)
+> ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_North_South_network2.png)
 > ![OpenStack Logical Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/openstack_North_South_network.png)
+
 
 <br><br>
 
