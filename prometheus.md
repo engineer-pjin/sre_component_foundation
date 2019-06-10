@@ -280,14 +280,78 @@ if __name__ == '__main__':
 >> test : http://<ip>:5000/
 (venv)# deactivate
 
+
+# vi /root/venv/project/app.py
+from flask import Flask, request
+import requests
+
+line_url = 'https://notify-api.line.me/api/notify'
+line_token = '**'
+
+app = Flask(__name__)
+
+@app.route("/", methods=['post'])
+def default():
+  data = request.get_json()
+  print(data)
+
+  noti_line_message = {'message' : data['status'] + '\n' + 'description: '+ data['alerts'][0]['annotations']['description']}
+  noti_line_header  = {'Authorization': 'Bearer ' + line_token}
+  response = requests.post(url='https://notify-api.line.me/api/notify', headers=noti_line_header, data=noti_line_message)
+  print(noti_line_message['message'])
+  return 'success'
+
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0')
+
+
 # vi ~/venv/project/webhook.ini
+[uwsgi]
+module = wsgi:app
+
+master=true
+processes=5
+
+socket = webhook.sock
+chmod-socket = 777
+vacuum= true
+
+die-on-term=true
+
 # vi /etc/systemd/system/webhook.service
+[Unit]
+Description=flask webhook service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/venv/project
+Environment="PATH=/root/venv/bin"
+ExecStart=/root/venv/bin/uwsgi --ini /root/venv/project/webhook.ini
+
+[Install]
+WantedBy=multi-user.target
+
+
 # systemctl enable webhook.service
 # systemctl start webhook.service
 
 
 # apt install nginx
 # vi /etc/nginx/sites-available/webhook
+server {
+    listen 8888;
+    server_name server_domain_or_IP;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/root/venv/project/webhook.sock;
+    }
+}
+
 # ln -s /etc/nginx/sites-available/webhook /etc/nginx/sites-enabled
 # vi /etc/nginx/nginx.conf
 > user root
