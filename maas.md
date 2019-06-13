@@ -8,7 +8,7 @@
 + IPMI (IDRAC, ILO, IMM..) 지원<br>
 + GUI, CLI, API 제공
 
-![maas_arch01][https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/maas_arch01.png]
+![maas_arch01](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/maas_arch01.png)
 
 <br>
 
