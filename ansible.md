@@ -158,6 +158,7 @@ vagrant-machine | SUCCESS => {
 > fact 수집<br>
 >> 파이썬이 없는 호스트 같이 하단에 셋업에 대한 부분은 점검하는 로직이 있음<br>
 >> 이부분은 false 처리하면 속도는 빨라짐.. <br>
+
 <br>
 
 
@@ -237,7 +238,7 @@ vagrant-machine | SUCCESS => {
         owner: ujin
         group: gjin
         mode: "u=rwx,g=rwx,o=r"
-        recurse: true		## R옵션
+        recurse: true		## 재생성 여부
 ```
 
 <br>
@@ -378,8 +379,9 @@ ansible-playbook release.yml --extra-vars \
 > 변수는 알파벳 대소문자, 숫자, 언더바만 가능
 
 <br>
+<br>
 
-- 동적 인벤토리 
+### + 동적 인벤토리 
 > iaas(aws, openstack), monitoring, vagrant 등등 <br>
 https://docs.openstack.org/openstack-ansible/newton/developer-docs/inventory.html
 >> 앤서블 명령을 실행할 때 실시간으로 스크립트가 실행
