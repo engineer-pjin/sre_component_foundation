@@ -134,9 +134,6 @@ vagrant-machine | SUCCESS => {
 <br>
 
 ### + ansible playbook
-> fact 수집
->> 파이썬이 없는 호스트 같이 하단에 셋업에 대한 부분은 점검하는 로직이 있음
->> 이부분은 false 처리하면 속도는 빨라짐.. 
 
 ```
 # ansible-playbook -i hosts site.yml
@@ -157,8 +154,10 @@ vagrant-machine | SUCCESS => {
 > 셋업값 확인
 # ansible all -i hosts -m setup
 ```
-> 권장은 플레이북에는 become:true, 필요에 따라 호스트/그룹 쪽에서 ansible_become_method 사용
-
+> 권장은 플레이북에는 become:true, 필요에 따라 호스트/그룹 쪽에서 ansible_become_method 사용<br>
+> fact 수집<br>
+>> 파이썬이 없는 호스트 같이 하단에 셋업에 대한 부분은 점검하는 로직이 있음<br>
+>> 이부분은 false 처리하면 속도는 빨라짐.. <br>
 <br>
 
 
@@ -284,6 +283,7 @@ vagrant-machine | SUCCESS => {
 <br>
 
 #### task : command 
+> https://docs.ansible.com/ansible/latest/modules/command_module.html#command-module<br>
 > 임의의 명령어 실행<br>
 > 명령을 실행한 후 종료상태가 0일때 성공 그외에는 실패 <br>
 > 성공 시 실행 결과는 항상 changed<br>
@@ -307,6 +307,10 @@ vagrant-machine | SUCCESS => {
 > 거의 비슷한 동작을 하는 shell 모듈이 있으나 멱등성이 보장이 안됨<br>
 
 <br>
+
+#### cli_command
+> https://docs.ansible.com/ansible/latest/modules/cli_command_module.html?highlight=command<br>
+> Run a cli command on cli-based network devices<br>
 
 #### handlers - task 동작 중 notify 시 실행
 ```
