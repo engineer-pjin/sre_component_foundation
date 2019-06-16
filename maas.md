@@ -2,8 +2,9 @@
 ## MAAS(metal as a service) 
 > 참조 : [MAAS 홈페이지](https://maas.io)
 ### + 정의
-+ providing infrastructure coordination<br>
++ providing infrastructure coordination & bare-metal server provisioning tool<br>
 + '지역 컨트롤러 (regiond)'를 뒷받침하는 중앙 계층화 된 아키텍처 <br>
++ Region controller, Cluster controller(s), Nodes로 구성
 + postgres db 사용, ha 구성은 db를 기반으로 설계<br>
 + IPMI (IDRAC, ILO, IMM..) 지원<br>
 + GUI, CLI, API 제공
@@ -19,7 +20,8 @@
 New | 새로운 서버 등록, pxe boot를 위한 mac을 등록하며 BMC parameters를 통해 자동 등록 가능
 Commissioning| 첫 부팅 시 pxe를 통해 임시 ubuntu os를 올리고 정보를 수집 
 Ready | Commissioning이 정상적으로 완료되어 제어 가능 상태 
-Allocated | network(boinding, addressing..) / disk(lvm, raid..) 설정 가능
+Allocated | network(boinding, address
+ing..) / disk(lvm, raid..) 설정 가능
 Deploying | os 배포 단계
 Releasing | 서버 사용 완료 후 공유 풀로 반환, 완료 후에는 ready 상태로 변환 됨
 
@@ -38,10 +40,10 @@ Commissioning 를 위한 정보를 가져오고 다시 꺼짐 <br>
 # apt update
 # apt install maas -y
 # maas createadmin
-Username: jin
+Username: pjin
 Password:
 Again:
-Email: jin@jin.jin
+Email: engineer.pjin@gmail.com
 Import SSH keys [] (lp:user-id or gh:user-id): root
 SSH import protocol was not entered.  Using Launchpad protocol (default).
 Unable to import SSH keys. There are no SSH keys for launchpad user root.
