@@ -176,11 +176,32 @@ vagrant-machine | SUCCESS => {
 
 <br>
 
+#### 초기 접속 설정 
+> python 설치, ssh 공개키 전달
+```
+---
+## with --ask-pass
+- name: python2 install
+  raw: /usr/bin/apt-get update && /usr/bin/apt-get -y install python
+  changed_when: false
+
+
+- lineinfile:
+    name: ~/.ssh/authorized_keys
+    create: yes
+    line: "{{ item }}"
+  with_items:
+    - "{{ id_rsa_pub }}"
+
+```
+
+
+<br>
+
 #### task : apt
 > https://docs.ansible.com/ansible/latest/modules/apt_module.html?highlight=apt
 
 ```
-  tasks:
     - name: iptraf-ng 설치
       apt:		  ## 모듈 네임 : ansible-doc -l
         name: iptraf-ng   ## 모듈 arg : value
@@ -214,34 +235,6 @@ vagrant-machine | SUCCESS => {
 
 <br>
 
-#### task : file
-> https://docs.ansible.com/ansible/latest/modules/file_module.html?highlight=file
-````
-    - name: /tmp/dir1 create
-      file:
-        path: /tmp/dir1
-        state: directory
-````
-> state 
- >> directory : 존재하지 않는다면 새로 생성<br>
- >> file : 파일 속성 변경, 파일이 없으면 에러<br>
- >> touch : 파일이 없으면 생성, 있으면 타임스태프 변경<br>
- >> link & hard : 심볼릭 & 하드 링크 생성<br>
- >> absent : 패스가 존자하면 파일과 디렉토리 삭제<br>
-
-
-```
-    - name: 권한
-      file:
-        path: /tmp/dir1
-        state: directory
-        owner: ujin
-        group: gjin
-        mode: "u=rwx,g=rwx,o=r"
-        recurse: true		## 재생성 여부
-```
-
-<br>
 
 #### task : copy
 > https://docs.ansible.com/ansible/latest/modules/copy_module.html?highlight=copy
@@ -264,17 +257,17 @@ vagrant-machine | SUCCESS => {
 ```
     - name: group add
       group:
-        name: test01
+        name: test
         gid: 1101
 
     - name: user add
       user:
-        name: test01
+        name: test
         uid: 1101
-        group: test01
+        group: test
         append: yes
         shell: /bin/bash
-        home: /home/ttt01
+        home: /home/test
         generate_ssh_key: yes
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
@@ -282,6 +275,36 @@ vagrant-machine | SUCCESS => {
 ```
 
 <br>
+
+#### task : file
+> https://docs.ansible.com/ansible/latest/modules/file_module.html?highlight=file
+````
+    - name: /tmp/dir1 create
+      file:
+        path: /tmp/dir1
+        state: directory
+````
+> state 
+ >> directory : 존재하지 않는다면 새로 생성<br>
+ >> file : 파일 속성 변경, 파일이 없으면 에러<br>
+ >> touch : 파일이 없으면 생성, 있으면 타임스태프 변경<br>
+ >> link & hard : 심볼릭 & 하드 링크 생성<br>
+ >> absent : 패스가 존자하면 파일과 디렉토리 삭제<br>
+
+
+```
+    - name: 권한
+      file:
+        path: /tmp/dir1
+        state: directory
+        owner: test
+        group: test
+        mode: "u=rwx,g=rwx,o=r"
+        recurse: true		## 재생성 여부
+```
+
+<br>
+
 
 #### task : command 
 > https://docs.ansible.com/ansible/latest/modules/command_module.html#command-module<br>
@@ -315,12 +338,17 @@ vagrant-machine | SUCCESS => {
 
 #### handlers - task 동작 중 notify 시 실행
 ```
-- name: ntp temp
-  template:
-    src: ntp.conf.j2
-    dest: /etc/ntp.conf
-  notify:
-    - ntp restart
+    - name: ntp 설치
+      apt:
+        name: ntp
+        state: present
+
+    - name: ntp temp
+      template:
+        src: ntp.conf.j2
+        dest: /etc/ntp.conf
+      notify:
+        - ntp restart
 ```
 ```
   handlers:
