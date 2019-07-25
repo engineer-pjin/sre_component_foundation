@@ -172,15 +172,18 @@ Orchestration | Heat | Orchestrates multiple composite cloud applications
 ## OpenStack의 방향성
 > 가상머신을 제공하는 플렛폼이 아닌 모든 인프라를 추상화 하고 서비스로 제공 
 
-+ Airship : 오픈 인프라의 라이프 싸이클을 시작부터 끝까지 모두 관리 
-+ Kata-Container : 표준 경량 VM 구현체 구축을 위한 오픈소스 프로젝트, 컨테이너 기술처럼 사용가능하게 구현하며 VM의 워크로드 격리
-+ StarlingX : Wind River® Titanium Cloud R5 제품을 기반으로 한 완벽한 기능의 고성능 Edge Cloud 소프트웨어 스택
-+ OpenStack-Helm : Kubernetes의 Helm Chart를 활용한 OpenStack의 설치와 운영
-+ Magnum : 컨테이너 오케스트레이션 엔진을 프로비저닝, 스케일링 및 관리를 하기 위한 서비스 집합
-
-.. 계속
-
-
+기술명 | 세부 
+:---:|:---:
+ Magnum | 컨테이너 오케스트레이션 엔진을 프로비저닝, 스케일링 및 관리를 하기 위한 서비스 집합
+ Kuryr | 컨테이너 네트워킹 모델 ↔ OpenStack 네트워킹 모델, 컨테이너에서 Neutron에서 정의된 네트워크를 직접 사용
+ Fuxi | 컨테이너 스토리지 모델 ↔ OpenStack 스토리지 모델
+ Manila | 컨테이너/K8s에서 Cinder 및 Manila 볼륨을 직접 사용 가능
+ Zun | OpenStack 인프라 환경 위에 컨테이너를 직접 관리, 컨테이너를 관리 가능한 모든 API를 제공함
+ Kolla | OpenStack 핵심 구성 요소들을 컨테이너화하여 관리
+ OpenStack-helm | Helm은 Kubernetes에 어플리케이션을 chart 단위로 배포하는 도구
+ Airship | 오픈 인프라의 라이프 싸이클을 시작부터 끝까지 모두 관리
+ Kata-Container | 표준 경량 VM 구현체 구축을 위한 오픈소스 프로젝트, 컨테이너 기술처럼 사용가능하게 구현하며 VM의 워크로드 격리
+ StarlingX | Wind River® Titanium Cloud R5 제품을 기반으로 한 완벽한 기능의 고성능 Edge Cloud 소프트웨어 스택
 
 
 
