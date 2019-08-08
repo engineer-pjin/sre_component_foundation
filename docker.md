@@ -184,7 +184,7 @@ hi pjin
 ```
 <br>
 
-### 도커 실행
+### + 도커 실행
 ```
 # docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
@@ -205,6 +205,7 @@ root@fabdb18b69d4:/#
  > -i -t 옵션은 docker attach 로 컨테이너로 접속(-i : 표준입력 with /bin/bash, -t : tty 쉘 사용)<br>
   >> --add-host=[] : 컨테이너의 etc/hosts에 추가<br>
   >> -c : cpu-share=1024 & cgroup(control groups)<br>
+  >> -d : deamon 실행
 
 > 컨테이너안에 프로세스는 백그라운드로 실행중이어야 하며 실행중인 프로세스가 없다면 중지됨, 중지하지 않고 나오려면 ctl + P + q<br>
   
