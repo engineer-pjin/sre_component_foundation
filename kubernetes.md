@@ -3,17 +3,19 @@
 <br>
 
 ## 기본
-### + 정의
+### + Kubernetes?
+- ***Desired State Management***
 - 구글 내부 SRE에서 개발된 borg(Large-scale cluster management)를 2014년에 오픈소스로 공개했고, 현재는 CNCF(Cloud Native Computing Foundation)에서 관리
 - kubernetes 이름은 키잡이, 파일럿이라는 의미의 그리스어에서 유래
 - container화 된 어플리케이션을 위한 배포 플랫폼
-- 운영에 있어 최고의 방법들에 기반하여 디자인
+- 운영에 있어 best practices에 기반하여 디자인
 - 어플리케이션의 lifecycle과 scaling을 관리
 
 <br>
 
 ### + 상세
 **특징**
+- desired state, stateless
 - 속도 : 높은 가용성, 불변성(immutable infrastructure), 선언형, 자가 치유
 - 확장성 : 분리된 아키텍처(decoupled architecture), 쉬운 확장 및 예측, msa를 통한 팀의 확장, 일관성과 확장성에 대한 고려사항 분리
 - 인프라 추상화 및 효율성
@@ -31,8 +33,8 @@
 
 <br><br>
 
-##  Architecture
-![Kubernetes Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/k8s_Architecture.PNG)
+##  structure
+![Kubernetes structure](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/post-ccm-arch.png)
 
 - 쿠버네티스 마스터 노드 프로세스<br>
 . kube-apiserver<br>
@@ -57,13 +59,17 @@
 
 ## 구성요소
 ### + basic object
-Kubernetes API의 추상화 된 객체, desired state
+Kubernetes API의 추상화 된 객체, desired state<br>
+![Kubernetes objects](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/sisdig_4.png)<br>
+
  - pod <br>
   . 고래(컨테이너)의 작은 그룹<br>
   . 네트워크 네임스페이스 및 볼륨 공유, ip는 서비스에서는 사용하지 않음<br>
   . Pod는 여러 컨테이너를 가질 수 있지만 대부분 1~2개로 구성<br>
   . 스케일링 또한 컨테이너가 아닌 Pod단위로 수행<br>
-  . pod는 하나의 물리적 노드에서 실행<br><br>
+  . pod는 하나의 물리적 노드에서 실행<br>
+    - pause 컨테이너가 생성되고 이를 통해 linux의 namespace 공유
+  . mortal 오브젝트 : 상태에 대해 보장하지 않음
  - service <br>
   . Pod의 Endpoint를 관리하고 Pod의 외부에서는 이 ‘Service’ 를 통해 Pod에 접근<br>
   . 포드에게 자신의 IP 주소와 포드 집합에 대한 단일 DNS 이름을 제공하고 프록시로 로드밸런싱을 수행<br>
@@ -98,10 +104,12 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
   . 배치 성격의 컨테이너를 실행하고 종료 까지 추적<br>
   . 병렬 배치 배치 가능 <br>
  - ingress<br>
-  . 클러스터 외부에서 접근하는 요청들에 대한 응답을 정의하며 HTTP(S)기반의 L7 로드밸런싱 기능을 제공<br>
-  . http 기반의 L7 로드밸런싱, HTTP 경로 라우팅, ssl 인증서 등을 정의하고 백엔드 테크와 연동 (ingress-nginx, haproxy, f5, openstack Octavia, aws ELB등)<br>
-  . pod 로 요청 직접 전달 
+  . 로드밸런싱을 위한 유연하고 독립적이며 이식 가능한 방법
+  . 클러스터 외부에서 접근하는 요청들에 대한 응답을 정의하며 HTTP(S)기반의 L7 로드밸런싱, 경로 라우팅, ssl 인증서 등을 제공하고 백엔드 테크와 연동<br>
+  . pod ip로 요청 전달
 
+  . Controller 유형 : ingress-nginx, Kong, haproxy-ingress, F5 Container Ingress, openstack octavia-ingress, ingress-gce, AWS ALB Ingress ..<br>
+![Kubernetes nginx Ingress](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/NGINX-Ingress-Controller-4-services.png)
 <br><br>
 
 ## 클러스터 연동
