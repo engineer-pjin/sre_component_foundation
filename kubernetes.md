@@ -32,7 +32,7 @@
 <br><br>
 
 ##  Architecture
-![Kubernetes Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/k8s_Architecture.png)
+![Kubernetes Architecture](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/k8s_Architecture.PNG)
 
 - 쿠버네티스 마스터 노드 프로세스<br>
 . kube-apiserver<br>
@@ -50,7 +50,7 @@
 - Data Plane : 컨테이너가 실행되고 네트워크에 연결될 수 있게 CPU, 메모리, 네트워크, 스토리지와 같은 능력을 제공
 - Control Plane : 컨테이너의 라이프사이클을 정의, 배포, 관리하기 위한 API와 인터페이스들을 노출하는 컨테이너 오케스트레이션 레이어
 
-![Kubernetes solutions](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/kubernetessolutions.png)
+![Kubernetes solutions](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/kubernetessolutions.PNG)
 > 관리주체에 따른 범위 구분
 
 <br><br>
@@ -110,7 +110,7 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
 - 별도 존(aws az와 같은 개념) 에서 구현되는 Cluster Federation feature의 경량 버전<br>
 - 전체 클러스터의 단일 정적 엔드포인트를 제공하고 클러스터 포드를 지정된 zone에 구성<br>
 - 현재 GCE 및 AWS에서 지원<br>
-![google k8s engine, regional cluster](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/gcp-google-kubernetes-engine-regional-clusterbcum)
+![google k8s engine, regional cluster](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/gcp-google-kubernetes-engine-regional-clusterbcum.png)
 > https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters?hl=ko
 <br>
 

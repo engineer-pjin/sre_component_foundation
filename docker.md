@@ -13,7 +13,7 @@
 
 
 ### + Docker
--  Go 언어로 개발된 컨테이너 기반의 추상화를 제공하는 플랫폼 <br>
+- Go 언어로 개발된 컨테이너 기반의 추상화를 제공하는 플랫폼 <br>
 - LXC 기반으로 사용하다 0.9버전에서는 libcontainer Driver를 통해서 직접 kernel API에 접근하는 libcontainer 사용, 이후 [OCI](https://www.opencontainers.org/)를 준수하는 runC로 대체 <br>
 - 2008년에 dotCloud를 통해 동명의 컨테이너 기술과 함께 Docker가 등장했으며, 2013년 [Pycon](https://pycon.org/)에서 공개<br>
 <br>
