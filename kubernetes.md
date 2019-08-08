@@ -107,9 +107,18 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
   . 로드밸런싱을 위한 유연하고 독립적이며 이식 가능한 방법
   . 클러스터 외부에서 접근하는 요청들에 대한 응답을 정의하며 HTTP(S)기반의 L7 로드밸런싱, 경로 라우팅, ssl 인증서 등을 제공하고 백엔드 테크와 연동<br>
   . pod ip로 요청 전달
-
   . Controller 유형 : ingress-nginx, Kong, haproxy-ingress, F5 Container Ingress, openstack octavia-ingress, ingress-gce, AWS ALB Ingress ..<br>
 ![Kubernetes nginx Ingress](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/NGINX-Ingress-Controller-4-services.png)
+<br><br>
+
+### + HPA(Horizontal Pod Autoscaler)
+- CPU 사용량 (또는 사용자 정의 메트릭, 아니면 다른 애플리케이션 지원 메트릭)을 관찰하여 레플리케이션 컨트롤러, 디플로이먼트 또는 레플리카 셋의 파드 개수를 자동으로 스케일<br>
+- 컨트롤러는 관찰된 평균 CPU 사용률이 사용자가 지정한 대상과 일치하도록 레플리케이션 컨트롤러 또는 디플로이먼트에서 레플리카 개수를 주기적으로 조정<br>
+ . --horizontal-pod-autoscaler-sync-period : 컨트롤 루프 주기<br>
+ . --horizontal-pod-autoscaler-upscale-delay : scale out후 upscale을 위한 delay<br>
+ . --horizontal-pod-autoscaler-downscale-delay : scale out 후 downscale을 위한 delay<br>
+ ![Kubernetes nginx Ingress](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/k8s_hpa.PNG)
+
 <br><br>
 
 ## 클러스터 연동
