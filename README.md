@@ -2,5 +2,4 @@
 > infrastructure as code 
 > 각 component는 의존성이 없이 독립적으로 구성되어야 하며, component를 object로 하여 backend Tech로 사용 가능해야 함
 
-
-
+구성원 : 채, 임, 김, 박
