@@ -106,7 +106,7 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
  - ingress<br>
   . 로드밸런싱을 위한 유연하고 독립적이며 이식 가능한 방법
   . 클러스터 외부에서 접근하는 요청들에 대한 응답을 정의하며 HTTP(S)기반의 L7 로드밸런싱, 경로 라우팅, ssl 인증서 등을 제공하고 백엔드 테크와 연동<br>
-  . pod ip로 요청 전달
+  . pod ip로 요청 전달<br>
   . Controller 유형 : ingress-nginx, Kong, haproxy-ingress, F5 Container Ingress, openstack octavia-ingress, ingress-gce, AWS ALB Ingress ..<br>
 ![Kubernetes nginx Ingress](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/NGINX-Ingress-Controller-4-services.png)
 <br><br>
