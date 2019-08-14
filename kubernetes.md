@@ -15,7 +15,7 @@
 
 ### + 상세
 **특징**
-- desired state, stateless
+- desired state : object를 label로 구분하여 yaml 파일에 선언
 - 속도 : 높은 가용성, 불변성(immutable infrastructure), 선언형, 자가 치유
 - 확장성 : 분리된 아키텍처(decoupled architecture), 쉬운 확장 및 예측, msa를 통한 팀의 확장, 일관성과 확장성에 대한 고려사항 분리
 - 인프라 추상화 및 효율성
