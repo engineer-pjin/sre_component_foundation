@@ -112,12 +112,17 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
 <br><br>
 
 ### + HPA(Horizontal Pod Autoscaler)
-- CPU 사용량 (또는 사용자 정의 메트릭, 아니면 다른 애플리케이션 지원 메트릭)을 관찰하여 레플리케이션 컨트롤러, 디플로이먼트 또는 레플리카 셋의 파드 개수를 자동으로 스케일<br>
-- 컨트롤러는 관찰된 평균 CPU 사용률이 사용자가 지정한 대상과 일치하도록 레플리케이션 컨트롤러 또는 디플로이먼트에서 레플리카 개수를 주기적으로 조정<br>
+- CPU 사용량 (또는 사용자 정의 메트릭, 아니면 다른 애플리케이션 지원 메트릭)을 관찰하여 레플리케이션 컨트롤러, 디플로이먼트 또는 레플리카 셋의 pod 개수를 자동으로 스케일<br>
+ . metrics.k8s.io : 리소스 메트릭, 클러스터 애드온<br>
+ . custom.metrics.k8s.io : 메트릭 솔루션 공급 업체에서 제공하는 “어댑터” API 서버에서 제공(ex: Prometheus)<br>
+ . external.metrics.k8s.io : 클러스터 외부에서 오는 메트릭을 기반, HPA v2 API extension proposal에서 제안 및 도입<br>
+  > Custom Metrics Adapter는 Custom Metrics API와 External Metrics API를 모두 제공 할 것으로 예상되지만 이는 필수 사항이 아니며 두 API를 별도로 구현하여 사용할 수 있음
+- Kubernetes 1.6부터 멀티 메트릭을 기반으로 스케일링을 지원<br>
+- 정해진 주기 동안 컨트롤러 관리자는 각 HorizontalPodAutoscaler 정의에 지정된 메트릭에 대해 리소스 사용률을 질의 후 레플리케이션 컨트롤러 또는 디플로이먼트에서 레플리카 개수를 주기적으로 조정<br>
  . --horizontal-pod-autoscaler-sync-period : 컨트롤 루프 주기<br>
  . --horizontal-pod-autoscaler-upscale-delay : scale out후 upscale을 위한 delay<br>
  . --horizontal-pod-autoscaler-downscale-delay : scale out 후 downscale을 위한 delay<br>
- ![Kubernetes nginx Ingress](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/k8s_hpa.PNG)
+ ![Kubernetes HPA](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/k8s_hpa.PNG)
 
 <br><br>
 
@@ -148,3 +153,16 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
   . Placement : 리소스가 표시 될 클러스터를 정의<br>
   . Overrides : 템플릿에 적용 할 클러스터 단위 필드 수준 변형을 정의<br>
  - 제공되는 building blocks : Status, Policy, Scheduling <br>
+
+<br><br>
+
+## 설치
+### + 환경
+- os : ubuntu 16.04
+- node
+- network
+- 배포 tool : Kubespray
+
+<br><br>
+### + Kubespray?
+- 배포 툴 종류 : kubeadm, kops, rancher, Kubespray
