@@ -5,7 +5,7 @@
 ## 기본
 ### + Kubernetes?
 - ***Desired State Management***
-- 구글 내부 SRE에서 개발된 borg(Large-scale cluster management)를 2014년에 오픈소스로 공개했고, 현재는 CNCF(Cloud Native Computing Foundation)에서 관리
+- 구글 내부 SRE에서 개발된 borg(Large-scale cluster management)를 기반으로 2014년에 오픈소스로 공개했고, 현재는 CNCF(Cloud Native Computing Foundation)에서 관리
 - kubernetes 이름은 키잡이, 파일럿이라는 의미의 그리스어에서 유래
 - container화 된 어플리케이션을 위한 배포 플랫폼
 - 운영에 있어 best practices에 기반하여 디자인
@@ -15,7 +15,7 @@
 
 ### + 상세
 **특징**
-- desired state : object를 label로 구분하여 yaml 파일에 선언
+- desired state : ***object*** 를 ***label*** 로 구분하여 yaml 파일에 ***선언***
 - 속도 : 높은 가용성, 불변성(immutable infrastructure), 선언형, 자가 치유
 - 확장성 : 분리된 아키텍처(decoupled architecture), 쉬운 확장 및 예측, msa를 통한 팀의 확장, 일관성과 확장성에 대한 고려사항 분리
 - 인프라 추상화 및 효율성
@@ -71,17 +71,21 @@ Kubernetes API의 추상화 된 객체, desired state<br>
     - pause 컨테이너가 생성되고 이를 통해 linux의 namespace 공유
   . mortal 오브젝트 : 상태에 대해 보장하지 않음
  - service <br>
-  . Pod의 Endpoint를 관리하고 Pod의 외부에서는 이 ‘Service’ 를 통해 Pod에 접근<br>
-  . 포드에게 자신의 IP 주소와 포드 집합에 대한 단일 DNS 이름을 제공하고 프록시로 로드밸런싱을 수행<br>
+  . pod의 endpoint를 관리하고 외부에서 Service를 통해 Pod에 접근<br>
+  . pod에게 자신의 IP 주소와 포드 집합에 대한 단일 DNS 이름을 제공하고 프록시로 로드밸런싱을 수행<br>
   . 각 서비스가 고유 한 IP를 수신하도록하기 위해 내부 할당자가 자동으로 etcd 의 전역 할당 맵을 업데이트<br>
+   - etcd : 클러스터 데이터를 담는 키-값 저장소
    - 서비스 환경 변수와 dns 두가지의 모드 제공<br>
-   - User space proxy mode : round-robin algorithm.<br>
-   - iptables proxy mode : 사용자 공간과 커널 공간 사이를 전환 할 필요없이 Linux netfilter가 트래픽을 처리, 10,000개 이상 서비스에서 느려짐<br>
-   - IPVS 프록시 모드 : netfilter 후크 기능을 기반으로하지만 해시 테이블을 기본 데이터 구조로 사용하고 커널 공간에서 작동, 라운드로빈/최소연결/대상 해시 등 다양한 밸런싱 옵션 제공<br>
- - volume<br>
-  . shared block storage를 사용, object 사용시 별도의 app 필요(ex MinIO - aws s3 연동)<br>
-  . 볼륨은 포드 내에서 실행되는 모든 컨테이너보다 오래 지속되며 데이터는 컨테이너를 다시 시작할 때까지 보존(포드 삭제 시 볼륨도 삭제)<br>
-  . nfs, iscsi, fc, ceph, glusterFS, vsphereVolume, aws EBS, azure Disk 등 다양한 백앤드 지원<br>
+  . service proxy : Pod-to-Service 및 External-to-Service 네트워킹 관리, 서비스의 가상 IP를 서비스가 제어하는 ​​백엔드 포드의 IP로 변환
+   - User space proxy mode : 외부 접근을 iptables를 통해 kube-proxy로 전달, round-robin algorithm<br>
+   - iptables proxy mode : 외부접근이 iptables에서 pod로 direct로 전달, 사용자 공간과 커널 공간 사이를 전환 할 필요없이 Linux netfilter가 트래픽을 처리, 10,000개 이상 서비스에서 느려지며 pod 미응답 시 실패 처리<br>
+   - IPVS(IP Virtual Server) 프록시 모드 : netfilter 후크 기능을 기반으로하지만 해시 테이블을 기본 데이터 구조로 사용하고 커널 공간에서 l4 layer로 작동, 라운드로빈/최소연결/대상 해시 등 다양한 밸런싱 옵션 제공<br>
+ - volume : PV(PersistentVolume - 리소스)와 PVC(PersistentVolumeClaim - 요청)를 통해 별도의 lifecycle 관리<br>
+  . Control Plane의 인터페이스를 통해 연동, CSI(Container Storage Interface)<br>
+  . shared block storage : 기본구성으로 사용됨<br>
+   - nfs, iscsi, fc, ceph, glusterFS, vsphereVolume, aws EBS, azure Disk 등 다양한 백앤드 지원<br>
+   - rook :  Kubernetes에서 Ceph를 yaml에 선언된 상태로 클러스터 배포부터 관리 까지 제공<br>
+  . object storage 사용시 별도의 app 필요(ex MinIO - aws s3 연동, ibmcloud-object-storage-plugin)<br>
  - namespace : 가상 클러스터<br>
   . 물리적 클러스터를 통해 지원되는 여러 가상 클러스터를 지원, 여러 사용자간에 클러스터 리소스를 나누는 방법<br>
   . 레이블 을 사용 하여 동일한 네임 스페이스 내의 다른 리소스를 구별<br>
@@ -112,6 +116,16 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
 <br><br>
 
 ### + HPA(Horizontal Pod Autoscaler)
+**scale 유형에 따른 구분** <br> 
+
+name | scale point | detail
+---|:---|:---
+CA(Cluster Autoscaler) | Kubernetes node | cloud platform과 연동
+VPA(Vertical Pod Autoscaler) | pod scale up | scale up 시 pod 재시작
+HPA(Horizontal Pod Autoscaler) | pod scale out | K
+<br> 
+
+**HPA 상세** <br>
 - CPU 사용량 (또는 사용자 정의 메트릭, 아니면 다른 애플리케이션 지원 메트릭)을 관찰하여 레플리케이션 컨트롤러, 디플로이먼트 또는 레플리카 셋의 pod 개수를 자동으로 스케일<br>
  . metrics.k8s.io : 리소스 메트릭, 클러스터 애드온<br>
  . custom.metrics.k8s.io : 메트릭 솔루션 공급 업체에서 제공하는 “어댑터” API 서버에서 제공(ex: Prometheus)<br>
@@ -141,8 +155,6 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
 ### + kubefed(Kubernetes Cluster Federation)
 > https://github.com/kubernetes-sigs/kubefed
 
-![concepts](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/kubefed_concepts.png)
-
  - Cluster Federation feature은 별도의 Federation Control Plane 필요<br>
  - 단일 API 엔드포인트에서 여러 Kubernetes 클러스터의 구성을 조정<br>
  - multi-geo applications 배포나 재해복구와 같은 다중 클러스터 사용 사례의 기초<br>
@@ -154,6 +166,8 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
   . Overrides : 템플릿에 적용 할 클러스터 단위 필드 수준 변형을 정의<br>
  - 제공되는 building blocks : Status, Policy, Scheduling <br>
 
+![concepts](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/kubefed_concepts.png)
+
 <br><br>
 
 ## 설치
@@ -164,5 +178,5 @@ basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및
 - 배포 tool : Kubespray
 
 <br><br>
-### + Kubespray?
+### + Kubespray
 - 배포 툴 종류 : kubeadm, kops, rancher, Kubespray
