@@ -36,12 +36,12 @@
 ##  structure
 ![Kubernetes structure](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/post-ccm-arch.png)
 
-- 쿠버네티스 마스터 노드 프로세스<br>
+- 쿠버네티스 마스터 프로세스<br>
 . kube-apiserver<br>
 . kube-controller-manager<br>
 . kube-scheduler<br>
 
-- 쿠버네티스 노드<br>
+- 쿠버네티스 노드 프로세스<br>
 . kubelet : 쿠버네티스 마스터와 통신<br>
 . kube-proxy : 각 노드의 쿠버네티스 네트워킹 서비스를 반영하는 네트워크 프록시<br>
 
@@ -62,7 +62,7 @@
 Kubernetes API의 추상화 된 객체, desired state<br>
 ![Kubernetes objects](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/sisdig_4.png)<br>
 
- - pod <br>
+ - ***pod*** <br>
   . 고래(컨테이너)의 작은 그룹<br>
   . 네트워크 네임스페이스 및 볼륨 공유, ip는 서비스에서는 사용하지 않음<br>
   . Pod는 여러 컨테이너를 가질 수 있지만 대부분 1~2개로 구성<br>
@@ -70,24 +70,25 @@ Kubernetes API의 추상화 된 객체, desired state<br>
   . pod는 하나의 물리적 노드에서 실행<br>
     - pause 컨테이너가 생성되고 이를 통해 linux의 namespace 공유
   . mortal 오브젝트 : 상태에 대해 보장하지 않음
- - service <br>
+ - ***service*** <br>
   . pod의 endpoint를 관리하고 외부에서 Service를 통해 Pod에 접근<br>
   . pod에게 자신의 IP 주소와 포드 집합에 대한 단일 DNS 이름을 제공하고 프록시로 로드밸런싱을 수행<br>
   . 각 서비스가 고유 한 IP를 수신하도록하기 위해 내부 할당자가 자동으로 etcd 의 전역 할당 맵을 업데이트<br>
    - etcd : 클러스터 데이터를 담는 키-값 저장소
    - 서비스 환경 변수와 dns 두가지의 모드 제공<br>
-  . service proxy : Pod-to-Service 및 External-to-Service 네트워킹 관리, 서비스의 가상 IP를 서비스가 제어하는 ​​백엔드 포드의 IP로 변환
+  . ***service proxy*** : Pod-to-Service 및 External-to-Service 네트워킹 관리, 서비스의 가상 IP를 서비스가 제어하는 ​​백엔드 포드의 IP로 변환
    - User space proxy mode : 외부 접근을 iptables를 통해 kube-proxy로 전달, round-robin algorithm<br>
    - iptables proxy mode : 외부접근이 iptables에서 pod로 direct로 전달, 사용자 공간과 커널 공간 사이를 전환 할 필요없이 Linux netfilter가 트래픽을 처리, 10,000개 이상 서비스에서 느려지며 pod 미응답 시 실패 처리<br>
    - IPVS(IP Virtual Server) 프록시 모드 : netfilter 후크 기능을 기반으로하지만 해시 테이블을 기본 데이터 구조로 사용하고 커널 공간에서 l4 layer로 작동, 라운드로빈/최소연결/대상 해시 등 다양한 밸런싱 옵션 제공<br>
- - volume : PV(PersistentVolume - 리소스)와 PVC(PersistentVolumeClaim - 요청)를 통해 별도의 lifecycle 관리<br>
+ - ***volume*** <br>
+  . PV(PersistentVolume - 리소스)와 PVC(PersistentVolumeClaim - 요청)를 통해 별도의 lifecycle 관리<br>
   . Control Plane의 인터페이스를 통해 연동, CSI(Container Storage Interface)<br>
   . shared block storage : 기본구성으로 사용됨<br>
    - nfs, iscsi, fc, ceph, glusterFS, vsphereVolume, aws EBS, azure Disk 등 다양한 백앤드 지원<br>
    - rook :  Kubernetes에서 Ceph를 yaml에 선언된 상태로 클러스터 배포부터 관리 까지 제공<br>
   . object storage 사용시 별도의 app 필요(ex MinIO - aws s3 연동, ibmcloud-object-storage-plugin)<br>
- - namespace : 가상 클러스터<br>
-  . 물리적 클러스터를 통해 지원되는 여러 가상 클러스터를 지원, 여러 사용자간에 클러스터 리소스를 나누는 방법<br>
+ - ***namespace*** <br>
+  . 물리적 클러스터를 통해 지원되는 여러 ***가상 클러스터*** 를 지원, 여러 사용자간에 클러스터 리소스를 나누는 방법<br>
   . 레이블 을 사용 하여 동일한 네임 스페이스 내의 다른 리소스를 구별<br>
   . DNS entry form은 <service-name>.<namespace-name>.svc.cluster.local<br>
 
@@ -95,19 +96,19 @@ Kubernetes API의 추상화 된 객체, desired state<br>
 
 ### + Controllers 
 basic objects를 기반으로 정의된 형상을 관리하고 부가 기능 및 편의 기능을 제공하는 higher-level 추상화 객체<br>
- - ReplicaSet : 정의된 수의 포드 단위 복제본 유지<br>
- - Deployments <br>
+ - ***ReplicaSet*** : 정의된 수의 포드 단위 복제본 유지<br>
+ - ***Deployments*** <br>
   . 컨테이너를 어떻게 생성하고 업데이트해야 하는지를 지시<br>
   . 자동 복구(self-healing) 메커니즘을 제공<br>
- - StatefulSets<br>
+ - ***StatefulSets***<br>
   . stateful applications을 관리하는 workload API object<br>
   . Kubernetes 1.9 버전부터 정식 지원 <br>
   . PersistentVolume Provisioner 에 의해 제공된 볼륨 사용<br>
- - DaemonSet : 클러스터 내 모든 노드에 정의된 컨테이너 생성<br>
- - Jobs <br>
+ - ***DaemonSet*** : 클러스터 내 모든 노드에 정의된 컨테이너 생성<br>
+ - ***Jobs*** <br>
   . 배치 성격의 컨테이너를 실행하고 종료 까지 추적<br>
   . 병렬 배치 배치 가능 <br>
- - ingress<br>
+ - ***ingress***<br>
   . 로드밸런싱을 위한 유연하고 독립적이며 이식 가능한 방법
   . 클러스터 외부에서 접근하는 요청들에 대한 응답을 정의하며 HTTP(S)기반의 L7 로드밸런싱, 경로 라우팅, ssl 인증서 등을 제공하고 백엔드 테크와 연동<br>
   . pod ip로 요청 전달<br>
@@ -122,7 +123,7 @@ name | scale point | detail
 ---|:---|:---
 CA(Cluster Autoscaler) | Kubernetes node | cloud platform과 연동
 VPA(Vertical Pod Autoscaler) | pod scale up | scale up 시 pod 재시작
-HPA(Horizontal Pod Autoscaler) | pod scale out | K
+HPA(Horizontal Pod Autoscaler) | pod scale out | 
 <br> 
 
 **HPA 상세** <br>
