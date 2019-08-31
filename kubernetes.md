@@ -5,6 +5,7 @@
 ## 기본
 ### + Kubernetes?
 - ***Desired State Management***
+- ***Infrastructure Abstraction***
 - 구글 내부 SRE에서 개발된 borg(Large-scale cluster management)를 기반으로 2014년에 오픈소스로 공개했고, 현재는 CNCF(Cloud Native Computing Foundation)에서 관리
 - kubernetes 이름은 키잡이, 파일럿이라는 의미의 그리스어에서 유래
 - container화 된 어플리케이션을 위한 배포 플랫폼
@@ -18,7 +19,7 @@
 - desired state : ***object*** 를 ***label*** 로 구분하여 yaml 파일에 ***선언***
 - 속도 : 높은 가용성, 불변성(immutable infrastructure), 선언형, 자가 치유
 - 확장성 : 분리된 아키텍처(decoupled architecture), 쉬운 확장 및 예측, msa를 통한 팀의 확장, 일관성과 확장성에 대한 고려사항 분리
-- 인프라 추상화 및 효율성
+
 
 **version**
 + xyz : x major, y minor, z patch
@@ -59,7 +60,7 @@
 
 ## 구성요소
 ### + basic object
-Kubernetes API의 추상화 된 객체, desired state<br>
+Kubernetes API의 추상화 된 객체<br>
 ![Kubernetes objects](https://raw.githubusercontent.com/engineer-pjin/sre_component_foundation/master/image/sisdig_4.png)<br>
 
  - ***pod*** <br>
@@ -68,15 +69,15 @@ Kubernetes API의 추상화 된 객체, desired state<br>
   . Pod는 여러 컨테이너를 가질 수 있지만 대부분 1~2개로 구성<br>
   . 스케일링 또한 컨테이너가 아닌 Pod단위로 수행<br>
   . pod는 하나의 물리적 노드에서 실행<br>
-    - pause 컨테이너가 생성되고 이를 통해 linux의 namespace 공유
-  . mortal 오브젝트 : 상태에 대해 보장하지 않음
+  -- pause 컨테이너가 생성되고 이를 통해 linux의 namespace 공유<br>
+  . mortal 오브젝트 : 상태에 대해 보장하지 않음<br>
  - ***service*** <br>
   . pod의 endpoint를 관리하고 외부에서 Service를 통해 Pod에 접근<br>
   . pod에게 자신의 IP 주소와 포드 집합에 대한 단일 DNS 이름을 제공하고 프록시로 로드밸런싱을 수행<br>
   . 각 서비스가 고유 한 IP를 수신하도록하기 위해 내부 할당자가 자동으로 etcd 의 전역 할당 맵을 업데이트<br>
-   - etcd : 클러스터 데이터를 담는 키-값 저장소
-   - 서비스 환경 변수와 dns 두가지의 모드 제공<br>
-  . ***service proxy*** : Pod-to-Service 및 External-to-Service 네트워킹 관리, 서비스의 가상 IP를 서비스가 제어하는 ​​백엔드 포드의 IP로 변환
+    -- etcd : 클러스터 데이터를 담는 키-값 저장소<br>
+    -- 서비스 환경 변수와 dns 두가지의 모드 제공<br>
+  . ***service proxy*** : Pod-to-Service 및 External-to-Service 네트워킹 관리, 서비스의 가상 IP를 서비스가 제어하는 ​​백엔드 포드의 IP로 변환<br>
    - User space proxy mode : 외부 접근을 iptables를 통해 kube-proxy로 전달, round-robin algorithm<br>
    - iptables proxy mode : 외부접근이 iptables에서 pod로 direct로 전달, 사용자 공간과 커널 공간 사이를 전환 할 필요없이 Linux netfilter가 트래픽을 처리, 10,000개 이상 서비스에서 느려지며 pod 미응답 시 실패 처리<br>
    - IPVS(IP Virtual Server) 프록시 모드 : netfilter 후크 기능을 기반으로하지만 해시 테이블을 기본 데이터 구조로 사용하고 커널 공간에서 l4 layer로 작동, 라운드로빈/최소연결/대상 해시 등 다양한 밸런싱 옵션 제공<br>
@@ -84,8 +85,8 @@ Kubernetes API의 추상화 된 객체, desired state<br>
   . PV(PersistentVolume - 리소스)와 PVC(PersistentVolumeClaim - 요청)를 통해 별도의 lifecycle 관리<br>
   . Control Plane의 인터페이스를 통해 연동, CSI(Container Storage Interface)<br>
   . shared block storage : 기본구성으로 사용됨<br>
-   - nfs, iscsi, fc, ceph, glusterFS, vsphereVolume, aws EBS, azure Disk 등 다양한 백앤드 지원<br>
-   - rook :  Kubernetes에서 Ceph를 yaml에 선언된 상태로 클러스터 배포부터 관리 까지 제공<br>
+   -- nfs, iscsi, fc, ceph, glusterFS, vsphereVolume, aws EBS, azure Disk 등 다양한 백앤드 지원<br>
+   -- rook :  Kubernetes에서 Ceph를 yaml에 선언된 상태로 클러스터 배포부터 관리 까지 제공<br>
   . object storage 사용시 별도의 app 필요(ex MinIO - aws s3 연동, ibmcloud-object-storage-plugin)<br>
  - ***namespace*** <br>
   . 물리적 클러스터를 통해 지원되는 여러 ***가상 클러스터*** 를 지원, 여러 사용자간에 클러스터 리소스를 나누는 방법<br>
@@ -173,11 +174,187 @@ HPA(Horizontal Pod Autoscaler) | pod scale out |
 
 ## 설치
 ### + 환경
-- os : ubuntu 16.04
-- node
-- network
-- 배포 tool : Kubespray
+ - version : 2.7.0
+ - link : https://github.com/kubernetes-sigs/kubespray/tree/release-2.7
+ - os : ubuntu 16.04
+ - node : k8s 마스터 1EA, k8s 노드 1EA<br>
+  . k8s01 : master node, 192.168.0.104<br>
+  . k8s02 : node, 192.168.0.105<br>
+  . <U>멀티 마스터 노드 추가</U><br><br>
+
 
 <br><br>
 ### + Kubespray
-- 배포 툴 종류 : kubeadm, kops, rancher, Kubespray
+- 배포 툴 종류 : kubeadm, kops, rancher, Kubespray<br>
+. <U>배포툴 차이 추가</U><br><br>
+- 쿠버네티스 서브 프로젝트(https://github.com/kubernetes-incubator)<br>
+- python & kubeadm & ansible<br>
+- 하이브리드 클라우드 지원, 각 클라우드의 고유 환경에 대한 의존성을 가지지 않고 동일한 추상화 레이어 제공
+- 다수의 네트워크 플러그인, Master의 HA, 클러스터의 확장 등 다양한 기능을 지원<br>
+- Requirements (2019.08 master branch 기준)<br>
+ . Kubernetes의 최소 필수 버전은 v1.14<br>
+ . Ansible v2.7.8 이상,  Jinja 2.9 이상<br>
+ . Master Memory : 1500 MB, Node Memory : 1024 MB<br>
+
+### + install
+소스 가져오기
+```
+# apt install git sshpass
+# wget https://bootstrap.pypa.io/get-pip.py 
+# python2 get-pip.py
+
+# git clone https://github.com/kubernetes-sigs/kubespray.git
+# cd kubespray
+
+```
+<br>
+
+키 배포
+```
+# ssh-keygen -t rsa
+# cat ~/.ssh/id_rsa.pub
+# vi keygen.yml
+## with --ask-pass
+---
+- name: keygen deploy
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: python2 install
+      raw: /usr/bin/apt-get update && /usr/bin/apt-get -y install python python-netaddr
+      changed_when: false
+
+    - lineinfile:
+        name: ~/.ssh/authorized_keys
+        create: yes
+        line: "{{ item }}"
+      with_items:
+        - "{{ auth_keys }}"
+  vars:
+    auth_keys:
+        - 
+
+# ansible-playbook -i inventory/inventory.ini keygen.yml --ask-pass
+# ansible all -i inventory/inventory.ini -m ping 
+
+```
+<br>
+
+기본환경 설정 및 배포
+```
+# pip install -r requirements.txt
+# pip2 list 
+
+# cp inventory/sample/inventory.ini inventory/ 
+# vi inventory/inventory.ini
+>> [kube-master]는 반드시 [etcd] 항목에 명시 필요
+[all]
+k8s01 ansible_host=192.168.0.104  ansible_user=root
+k8s02 ansible_host=192.168.0.105  ansible_user=root
+
+
+[kube-master]
+k8s01
+
+[etcd]
+k8s01
+
+[kube-node]
+k8s02
+
+[calico-rr]
+
+[k8s-cluster:children]
+kube-master
+kube-node
+
+# vi inventory/local/group_vars/k8s-cluster/addons.yml
+~
+dashboard_enabled: true
+helm_enabled: true
+
+
+# vi inventory/local/group_vars/k8s-cluster/k8s-cluster.yml
+~
+kube_network_plugin: calico
+kube_network_plugin_multus: false
+kube_service_addresses: 10.233.0.0/18
+kube_pods_subnet: 10.233.64.0/18
+
+# vi cluster.yml
+# ansible-playbook -i inventory/inventory.ini cluster.yml
+```
+<br>
+
+확인
+```
+# kubectl version
+
+# kubectl cluster-info
+# kubectl cluster-info dump
+
+# kubectl config view
+
+# kubectl help 
+# kubectl get [resource] [object] -o wide -o json -o yaml
+
+# kubectl get componentstatuses
+
+# kubectl get nodes
+# kubectl describe nodes [node]
+
+# kubectl get pods --all-namespaces 
+# kubectl get pods -A
+> 별도의 네임스페이스 지정이 없을 시 default namespace 사용
+
+# kubectl get deployment -n kube-system
+# kubectl get deployment --namespace=kube-system coredns
+
+# kubectl get service -A
+# kubectl get service -n=kube-system kubernetes-dashboard
+
+# kubectl get namespace
+```
+<br><br>
+
+### + 유저 생성 및 대쉬보드 접속
+유저 생성
+```
+# vi user.yml
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kube-system
+
+# vi user_role.yml
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kube-system
+
+# kubectl create -f user.yml
+serviceaccount/admin-user created
+
+# kubectl create -f user_rolebinding.yml
+clusterrolebinding.rbac.authorization.k8s.io/admin-user created
+
+# kubectl -n kube-system describe secret admin-user 
+> 토큰 확인
+```
+<br>
+
+대쉬보드 접속<br>
+**https://[ip]:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login**<br>
+> 토큰 입력 후 로그인
