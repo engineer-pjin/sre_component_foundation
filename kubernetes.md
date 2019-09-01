@@ -358,3 +358,60 @@ clusterrolebinding.rbac.authorization.k8s.io/admin-user created
 대쉬보드 접속<br>
 **https://[ip]:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login**<br>
 > 토큰 입력 후 로그인
+
+<br>
+
+### + POD 동작 검증
+pod 생성 - CLI
+```
+# kubectl run --restart=Never --image=gcr.io/kuar-demo/kuard-amd64:blue kuard01
+pod/kuard01 created
+
+# kubectl get pods
+```
+
+<br>
+
+pod 생성 - manifast
+> https://github.com/kubernetes-up-and-running
+```
+# vi kuard02-pod.yaml 
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard02
+spec:
+  containers:
+  - image: gcr.io/kuar-demo/kuard-amd64:1
+    name: kuard02
+    ports:
+    - containerPort: 8080
+      name: http
+      protocol: TCP
+
+# kubectl apply -f kuard02-pod.yaml
+pod/kuard02 created
+
+# kubectl get pods
+```
+
+<br>
+
+pod 확인 및 삭제
+```
+# kubectl get pods -o wide
+# kubectl describe pods [pod name]
+
+# kubectl port-forward [pod name] 8080:8080
+
+> 다른 세션에서 
+# curl localhost:8080
+
+> 혹은 pod ip 직접 check
+# curl [pod ip]:8080
+
+# kubectl logs [pod name] -f  
+
+# kubectl delete pod/[pod name] 
+```
