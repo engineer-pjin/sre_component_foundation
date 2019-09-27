@@ -252,6 +252,7 @@ HPA(Horizontal Pod Autoscaler) | pod scale out |
 [all]
 k8s01 ansible_host=192.168.0.104  ansible_user=root
 k8s02 ansible_host=192.168.0.105  ansible_user=root
+k8s03 ansible_host=192.168.0.106  ansible_user=root
 
 
 [kube-master]
@@ -262,6 +263,7 @@ k8s01
 
 [kube-node]
 k8s02
+k8s03
 
 [calico-rr]
 
@@ -288,6 +290,7 @@ kube_pods_subnet: 10.233.64.0/18
 <br>
 
 확인
+> [kubectl 치트 시트](https://kubernetes.io/ko/docs/reference/kubectl/cheatsheet/)
 ```
 # kubectl version
 
@@ -347,7 +350,7 @@ subjects:
 # kubectl create -f user.yml
 serviceaccount/admin-user created
 
-# kubectl create -f user_rolebinding.yml
+# kubectl create -f user_role.yml
 clusterrolebinding.rbac.authorization.k8s.io/admin-user created
 
 # kubectl -n kube-system describe secret admin-user 
@@ -361,11 +364,32 @@ clusterrolebinding.rbac.authorization.k8s.io/admin-user created
 
 <br>
 
-### + POD 동작 검증
+
+<br><br>
+
+## basic object 실습
+### + 사전 작업
+> pod에 할당된 스펙을 넘을때 메모리가 모자라면 pod를 죽이고 cpu가 모자라면 share <br>
+> 라벨은 키:밸류 형식으로 여러개 할당가능 <br>
+
+노드 라벨링
+> 참조 : https://kubernetes.io/ko/docs/concepts/architecture/nodes/
+```
+# kubectl get nodes 
+
+# kubectl label nodes k8s02 node=node01 
+# kubectl label nodes k8s03 node=node02
+
+# kubectl get nodes --show-labels
+```
+
+
+
+### + POD 
 pod 생성 - CLI
 ```
-# kubectl run --restart=Never --image=gcr.io/kuar-demo/kuard-amd64:blue kuard01
-pod/kuard01 created
+# kubectl run --restart=Never --image=docker.io/library/nginx:1.15 nginx-test01
+pod/nginx-test01 created
 
 # kubectl get pods
 ```
@@ -373,27 +397,26 @@ pod/kuard01 created
 <br>
 
 pod 생성 - manifast
-> https://github.com/kubernetes-up-and-running
 ```
-# vi kuard02-pod.yaml 
+# vi nginx-test02_pod.yml 
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: kuard02
+  name: nginx-test02
 spec:
   containers:
-  - image: gcr.io/kuar-demo/kuard-amd64:1
-    name: kuard02
+  - image: docker.io/library/nginx:1.15
+    name: nginx-test02
     ports:
-    - containerPort: 8080
+    - containerPort: 80
       name: http
       protocol: TCP
 
-# kubectl apply -f kuard02-pod.yaml
-pod/kuard02 created
+# kubectl apply -f nginx-test02_pod.yml 
+pod/nginx-test02 created
 
-# kubectl get pods
+# kubectl get pods nginx-test02 -o json
 ```
 
 <br>
@@ -403,15 +426,31 @@ pod 확인 및 삭제
 # kubectl get pods -o wide
 # kubectl describe pods [pod name]
 
-# kubectl port-forward [pod name] 8080:8080
+# kubectl port-forward [pod name] 8000:80
 
 > 다른 세션에서 
-# curl localhost:8080
+# curl localhost:8000
+&
+> pod ip 직접 check
+# curl [pod ip]:80
+&
+> pod 접속
+# kubectl exec -it [pod name] -- /bin/bash
 
-> 혹은 pod ip 직접 check
-# curl [pod ip]:8080
 
+> 로그 확인
 # kubectl logs [pod name] -f  
 
+> 삭제
 # kubectl delete pod/[pod name] 
 ```
+
+
+### + Service
+### + Volume
+### + Namespace
+
+<br><br>
+
+## Controller 실습
+### + 
