@@ -17,7 +17,7 @@
 ### + 상세
 **특징**
 - desired state : ***object*** 를 ***label*** 로 구분하여 yaml 파일에 ***선언***
-- 속도 : 높은 가용성, 불변성(immutable infrastructure), 선언형, 자가 치유
+- 속도 : 높은 가용성, 불변성(immutable infrastructure), environment disparity, 선언형, 자가 치유
 - 확장성 : 분리된 아키텍처(decoupled architecture), 쉬운 확장 및 예측, msa를 통한 팀의 확장, 일관성과 확장성에 대한 고려사항 분리
 
 
@@ -445,8 +445,73 @@ pod 확인 및 삭제
 # kubectl delete pod/[pod name] 
 ```
 
+<br>
+
 
 ### + Service
+> type : clusterip(내부연동), nodeport(물리 노드 포트 연동), loadbalancer  
+서비스 생성
+```
+# vi nginx-test_svc.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-test-svc
+spec:
+  selector:
+    app: nt
+  ports:
+    - port: 8000
+      targetPort: 80
+  type: LoadBalancer
+  externalIPs:
+  - 192.168.0.111
+
+# kubectl apply -f nginx-test_svc.yml
+
+# kubectl get services
+# kubectl describe services
+
+```
+
+POD 생성
+> 밸런싱 여부 확인을 위해 initContainers, volume(emptyDir) 적용
+> 하단의 템플릿을 여러개 생성 후 CRUD에 따라 service 연동 및 분배 여부 확인 
+```
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-init-test02
+  labels:
+    app: nt
+    step: dev
+spec:
+  containers:
+  - image: docker.io/library/nginx:1.15
+    name: nginx-test02
+    ports:
+    - containerPort: 80
+      name: http
+      protocol: TCP
+    volumeMounts:
+    - name: workdir
+      mountPath: "/usr/share/nginx/html/"
+
+  initContainers:
+  - name: init
+    image: docker.io/library/alpine:latest
+    command: ["sh", "-c", "hostname > /temp/index.html"]
+    volumeMounts:
+    - name: workdir
+      mountPath: "/temp"
+
+  volumes:
+  - name: workdir
+    emptyDir: {}
+```
+
 ### + Volume
 ### + Namespace
 
