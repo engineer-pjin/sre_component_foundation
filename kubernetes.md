@@ -449,7 +449,8 @@ pod 확인 및 삭제
 
 
 ### + Service
-> type : clusterip(내부연동), nodeport(물리 노드 포트 연동), loadbalancer  
+> type : clusterip(내부연동), nodeport(물리 노드 포트 연동), loadbalancer  <br>
+
 서비스 생성
 ```
 # vi nginx-test_svc.yml
@@ -476,8 +477,8 @@ spec:
 ```
 
 POD 생성
-> 밸런싱 여부 확인을 위해 initContainers, volume(emptyDir) 적용
-> 하단의 템플릿을 여러개 생성 후 CRUD에 따라 service 연동 및 분배 여부 확인 
+> 밸런싱 여부 확인을 위해 initContainers, volume(emptyDir) 적용<br>
+> 하단의 템플릿을 여러개 생성 후 CRUD에 따라 service 연동 및 분배 여부 확인 <br>
 ```
 ---
 apiVersion: v1
