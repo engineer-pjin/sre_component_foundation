@@ -580,7 +580,7 @@ spec:
    gitRepo:
      repository: https://github.com/engineer-pjin/sre_component_foundation.git
      revision: master
-     directory: ./image
+     directory: ./
 ```
 
 <br><br>
