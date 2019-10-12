@@ -321,8 +321,8 @@ kube_pods_subnet: 10.233.64.0/18
 ```
 <br><br>
 
-### + 유저 생성 및 대쉬보드 접속
-유저 생성
+### + Service Account 생성 및 대쉬보드 접속
+Service Account 생성
 ```
 # vi user.yml
 ---
@@ -407,7 +407,7 @@ metadata:
 spec:
   containers:
   - image: docker.io/library/nginx:1.15
-    name: nginx-test02
+    name: nginx-test
     ports:
     - containerPort: 80
       name: http
@@ -451,7 +451,7 @@ pod 확인 및 삭제
 ### + Service
 > type : clusterip(내부연동), nodeport(물리 노드 포트 연동), loadbalancer  <br>
 
-서비스 생성
+LoadBalancer Type 서비스 생성
 ```
 # vi nginx-test_svc.yml
 ---
@@ -484,14 +484,14 @@ POD 생성
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-init-test02
+  name: nginx-init-test01
   labels:
     app: nt
     step: dev
 spec:
   containers:
   - image: docker.io/library/nginx:1.15
-    name: nginx-test02
+    name: nginx-test
     ports:
     - containerPort: 80
       name: http
@@ -512,9 +512,117 @@ spec:
   - name: workdir
     emptyDir: {}
 ```
+> emptydir은 호스트의 /var/lib/kubelet/pods/[uuid]/volumes/~ 사용
+
+<br>
 
 ### + Volume
+> type : emptydir, hostpath, gitRepo, Openstack Cinder, S3, PVS/PV <br>
+
+hostPath type 연동
++ 사전에 각 호스트 노드에 디렉토리 및 index.html 파일 생성
+```
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: volume-hostpath-test01
+ labels:
+   app: nt
+   step: dev
+spec:
+ containers:
+ - image: docker.io/library/nginx:1.15
+   name: volume-hostpath-test
+   ports:
+   - containerPort: 80
+     name: http
+     protocol: TCP   
+   volumeMounts:
+   - name: hostpath-volume
+     mountPath: /usr/share/nginx/html
+ nodeSelector:
+   node: node01
+ volumes:
+ - name: hostpath-volume
+   hostPath:
+     path: /volume-test
+     type: Directory
+```
+
+<br>
+
+gitRepo type 연동
+```
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: volume-gitrepo-test01
+ labels:
+   app: nt
+   step: dev
+spec:
+ containers:
+ - image: docker.io/library/nginx:1.15
+   name: volume-gitrepo-test
+   ports:
+   - containerPort: 80
+     name: http
+     protocol: TCP   
+   volumeMounts:
+   - name: git-volume
+     mountPath: /usr/share/nginx/html/
+     readOnly: true
+ 
+ volumes:
+ - name: git-volume
+   gitRepo:
+     repository: https://github.com/engineer-pjin/sre_component_foundation.git
+     revision: master
+     directory: ./image
+```
+
+<br><br>
+
 ### + Namespace
+namespace 생성
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-name01
+```
+
+<br>
+
+pod 생성 
+> 기존에 생성되어 있는 서비스와 연동되지 않는 부분 확인<br>
+```
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: name-test01
+  labels:
+    app: nt
+    step: dev  
+spec:
+  containers:
+  - image: docker.io/library/nginx:1.15
+    name: name-test
+    ports:
+    - containerPort: 80
+      name: http
+      protocol: TCP
+```
+
+```
+# kubectl config set-context --current --namespace=test-name01
+# kubectl get pods
+# kubectl get services
+```
+
 
 <br><br>
 
