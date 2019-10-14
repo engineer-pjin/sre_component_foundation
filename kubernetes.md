@@ -627,4 +627,96 @@ spec:
 <br><br>
 
 ## Controller 실습
-### + 
+### + Replicaset
+> replicas 변경 및 삭제 테스트 진행 <br>
+```
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset-test01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nt
+      step: dev
+  template:
+    metadata:
+      labels:
+        app: nt
+        step: dev          
+    spec:
+      containers:
+      - image: docker.io/library/nginx:1.15
+        name: nginx-test
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: workdir
+          mountPath: "/usr/share/nginx/html/"  
+
+      initContainers:
+      - name: init
+        image: docker.io/library/alpine:latest
+        command: ["sh", "-c", "hostname > /temp/index.html"]
+        volumeMounts:
+        - name: workdir
+          mountPath: "/temp"
+      
+      volumes:
+      - name: workdir
+        emptyDir: {}
+```
+
+<br><br>
+
+### + Deployment 실습
+> Recreate, RollingUpdate type 지원 : RollingUpdate test 진행<br>
+
+RollingUpdate type Deployment 생성 
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-test01
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nt
+      step: dev
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nt
+        step: dev          
+    spec:
+      containers:
+      - image: docker.io/library/nginx:1.15
+        name: nginx-test
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: workdir
+          mountPath: "/usr/share/nginx/html/"  
+
+      initContainers:
+      - name: init
+        image: docker.io/library/alpine:latest
+        command: ["sh", "-c", "hostname > /temp/index.html"]
+        volumeMounts:
+        - name: workdir
+          mountPath: "/temp"
+      
+      volumes:
+      - name: workdir
+        emptyDir: {}
+```
