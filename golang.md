@@ -55,7 +55,7 @@ func main() {
 ### 변수 & 연산자
 #### 변수 
 + 변수의 속성 : 이름, 타입, 값, 메모리 주소, 사이즈, 끝점(주소+사이즈)
-+ int : 4/8 byte, int32 : 4byte(32bit), int64 : 8byte(64bit), int8 : 1byte(-128 ~ 127), uint8 : 1byte(0~255)<br>
++ int : 4/8 byte, int32 : 4byte(32bit), int64 : 8byte(64bit), int8 : 1byte(-128 ~ 127), uint8 : 1byte(0 ~ 255)<br>
 . float32 : 4byte(32bit 숫자는 7개까지 표현), float64 : 8byte(64bit 숫자는 15개까지 표현)<br>
 . string : rune(1~3byte)의 모임(배열)<br>
 . bool : True / False<br>
