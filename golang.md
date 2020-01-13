@@ -229,4 +229,5 @@ func main() {
 
 <br><br>
 
-### **assignment** : if 문과 for문을 활용하여 11~100 사이 선언한 두개의 숫자의 값을 출력하고, 해당 결과가 11의 배수이거나 0이라면 종료 후 0을 리턴, 아니라면 첫번째 숫자의 1을 계속 더하여 11의 배수가 되는 횟수를 리턴해라. 
+### **assignment01** : if 문과 for문을 활용하여 11~100 사이 선언한 두개의 숫자의 값을 출력하고, 해당 결과가 11의 배수이거나 0이라면 종료 후 0을 리턴, 아니라면 첫번째 숫자의 1을 계속 더하여 11의 배수가 되는 횟수를 리턴해라. 위 코드 작성 후 https://github.com/engineer-pjin/sre_component_foundation 레포 assignment 디렉토리에 추가 하시고 PR 요청해주시면 됩니다. (ex : assignment01_park.go)
+> 참조 : https://wayhome25.github.io/git/2017/07/08/git-first-pull-request-story/
