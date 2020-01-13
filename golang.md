@@ -55,13 +55,15 @@ func main() {
 ### 변수 & 연산자
 #### 변수 
 + 변수의 속성 : 이름, 타입, 값, 메모리 주소, 사이즈, 끝점(주소+사이즈)
-+ int : 4/8 byte, int32 : 4byte(32bit), int64 : 8byte(64bit), int8 : 1byte(-128 ~ 127), uint8 : 1byte(0~255)
- float32 : 4byte(32bit 숫자는 7개까지 표현), float64 : 8byte(64bit 숫자는 15개까지 표현)
- string : rune(1~3byte)의 모임(배열)
- bool : True / False
++ int : 4/8 byte, int32 : 4byte(32bit), int64 : 8byte(64bit), int8 : 1byte(-128 ~ 127), uint8 : 1byte(0~255)<br>
+. float32 : 4byte(32bit 숫자는 7개까지 표현), float64 : 8byte(64bit 숫자는 15개까지 표현)<br>
+. string : rune(1~3byte)의 모임(배열)<br>
+. bool : True / False<br>
+
 + 각 변수는 {} 기준으로 선언된 지역에서만 인식이 됨
 + 변수 선언 시 어떤 값으로 초기화 되는 지 명시적으로 스펙에 지정됨
 
+<br>
 
 #### 연산자
 - 산술 연산자 : + - * / % ++ 11
