@@ -232,3 +232,308 @@ func main() {
 ### **assignment01** : if 문과 for문을 활용하여 11~100 사이 선언한 두개의 숫자 중 처음 수에서 두번째 수를 뺀 값을 출력하고, 해당 결과가 11의 배수이거나 0이라면 종료 후 0을 리턴, 아니라면 첫번째 숫자의 1을 계속 더하여 11의 배수가 되는 횟수를 리턴해라.<br>
 ### 위 코드 작성 후 https://github.com/engineer-pjin/sre_component_foundation 레포 assignment 디렉토리에 추가 하시고 PR 요청해주시면 됩니다. (ex : assignment01_park.go)
 > 참조 : https://wayhome25.github.io/git/2017/07/08/git-first-pull-request-story/
+
+<br><br>
+
+### 함수
+#### 함수 : 반복되는 작업을 분리
+ - 모듈화, 격리(분리 - decoupling)
+ - 응집성(cohesive)는 높이고 종속성(dependency)은 낮춤 
+
+#### 기본 형태
+```
+package main
+
+import "fmt"
+
+// add(x int, y int) == add(x, y int)
+// 두개이상의 값을 반환 가능
+func add(x int, y int) int { // 입력 int 2ea, 출력 int 1ea
+
+	return x + y
+}
+
+func main() {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%d + %d = %d\n", i, i+2, add(i, i+2))
+	}
+
+}
+```
+
+<br>
+
+#### 재귀함수
+ - 모든 재귀호출은 반목문으로 표현 가능
+ - 반복문보다는 메모리 사용이 비효율적 : go는 함수형 언어가 아님, 느림
+ - return을 통한 탈출 코드 필수
+ - 재귀 호출이 필요한 경우
+  .수학, 알고리즘 : 피보나치 수열 등
+
+```
+package main
+
+import "fmt"
+
+func recu(x int) {
+	if x == 0 {
+		return
+	}
+	fmt.Println(x)
+	recu(x - 1)
+}
+
+func recusum(x int, s int) int {
+	if x == 0 {
+		return s
+	}
+	s += x
+	return recusum(x-1, s)
+}
+
+func main() {
+	recu(10)
+	fmt.Println(recusum(10, 0))
+
+}
+```
+
+<br>
+
+####  pointer 
++ 포인터 연산이나 형변환 없이 명시적으로 사용
++ 변수는 "이름" "타입" "값" "메모리 주소" 를 가짐<br>
+ . 포인터는 변수의 "메모리 주소" 
++ 함수로 포인터를 복사할때는 밸류 복사보다 양이 적다(메모리 주소만 복사되기 때문)
+
+<br>
+
+#### Pass By Value & Reference with pointer
+```
+package main
+
+import "fmt"
+
+func vadd(x int) {
+	x++
+}
+
+func radd(y *int) {
+	*y++
+}
+
+func main() {
+	var a int
+	var b *int
+
+	b = &a
+	a = 3
+	fmt.Println(a, b, *b)
+
+	*b = 5
+	fmt.Println(a, b, *b)
+
+	vadd(a)
+	fmt.Println(a)
+
+	radd(b)
+	fmt.Println(a)
+
+}
+
+
+```
+
+<br><br>
+
+### Collection
+자료구조를 표현한 형식
+
+#### array
+연속적인 메모리 공간에 동일한 타입의 데이타를 순서적으로 저장하는 자료구조
++ 배열 변수는 메모리상에서의 시작지점을 나타낸다.
++ utf8 의 글자는 1~3byte 임 (영어 1byte, 한글 3byte)
++ 문자열은 배열임, byte가 아닌 rune type은 한글등의 2byte 이상의 크기도 한글자로 인식해줌(utf8)
+
+<br>
+
+#### slice
+동적 배열 : golang에서 주로 사용하는 타입
+ - 배열의 크기가 변하면 새로운 메모리 공간을 만들고 복사(동적 배열은 실제 고정 배열을 가르키고 있음)
+ - append로 추가시 할당된 공간을 넘게되면 복사가 되며, 그러면 원래 슬라이스와 다른 메모리 영역을 가짐 
+  . 다른 메모리 영역을 가지려면 for문을 이용한 복사를 해라!
+
+```
+package main
+
+import "fmt"
+
+func RmBack(a []int, backnum int) ([]int, int) {
+	return a[:len(a)-backnum], backnum
+}
+
+func main() {
+	// array 선언
+	var arr1 = [3]int{1, 2, 3}
+    var arr2 = [...]int{1, 2, 3} //배열크기 자동으로
+	fmt.Println(arr1, arr2)
+
+    // slice 선언
+	var a []int
+	b := []int{1, 2, 3, 4}
+	c := make([]int, 3, 8) // (type, len, cap)
+
+	fmt.Println(len(a), cap(a))
+	fmt.Println(len(b), cap(b), len(c), cap(c))
+	fmt.Printf("%d %p %d %p\n", b, &b, c, &c)
+
+	b = append(b, 1)
+	c = append(c, 1)
+
+	fmt.Println(len(b), cap(b), len(c), cap(c))
+	fmt.Printf("%d %p %d %p\n", b, &b, c, &c) // 캐패시티의 변화에도 주소가 같음, 즉 메모리 복사가 발생하지 않음
+
+	d := []int{1}
+	e := append(d, 3)
+	fmt.Printf("%p %p \n", d, e) // 변수가 바뀌고 캐패시티 변경 없음에도 주소가 달라짐
+
+	st := make([]int, 7, 8)
+	// 연산자 참조 http://pyrasis.com/book/GoForTheReallyImpatient/Unit13
+	for i := 1; i <= len(st); i++ {
+		if i == len(st) {
+			break
+		}
+		st[i-1] = i
+	}
+	fmt.Println(st, st[3:6], st[:4]) // [1 2 3 4 5 6 0] [4 5 6] [1 2 3 4]
+
+	st1 := st[:2]
+	st1[0] = 10
+	fmt.Println(st) // [10 2 3 4 5 6 0] st1은 st의 슬라이스된 부분의 주소값을 가르키기 때문에 st1을 변경하면 st도 변경됨
+	var backnum int
+	stb, backnum := RmBack(st, 3) // 두번째 인자만큼 슬라이스를 줄이는 함수
+	fmt.Println(stb, backnum)
+}
+
+```
+
+<br>
+
+#### map
+key & value 형식 = dict, hash table
+```
+package main
+
+import "fmt"
+
+func main() {
+	//var mmap map[string]string     // 선언
+	//mmap = make(map[string]string) // 초기화
+	mmap := make(map[string]string) // 선언 초기화 동시에
+	mmap["aa"] = "11"
+	fmt.Println(mmap["aa"])
+	fmt.Println(mmap["bb"]) //값이 없으면 기본값 출력(string 는 빈칸, int 0, bool은 false),
+
+	mmap["cc"] = ""
+	mmapNil1, ok1 := mmap["ss"] // 기본값이 없어서 기본값인지 원래 기본값인지 보기
+	mmapNil2, ok2 := mmap["cc"] // 원래가 기본값이면 true 반환
+
+	fmt.Println(mmapNil1, ok1, mmapNil2, ok2)
+
+	delete(mmap, "cc")
+	mmapNil2, ok2 = mmap["cc"] // 키에 해당하는 벨류 지우기
+	fmt.Println(mmapNil1, ok1, mmapNil2, ok2)
+
+	// 기본 map 선언 초기화 밸류넣기
+	tickers := map[string]string{
+		"GOOG": "Google Inc",
+		"MSFT": "Microsoft",
+		"FB":   "FaceBook",
+		"AMZN": "Amazon",
+	}
+	fmt.Println(tickers["FB"])
+
+	for key, value := range tickers { // 키와 밸류 모두 찾아내기, 무작위
+		fmt.Println(key, value)
+	}
+
+}
+```
+
+<br><br>
+
+### 구조체 : structure
+새로운 타입 정의, 타언어의 class와 동일<br>
+프로그래밍은 응집성(cohesive)을 높이고 종속성을 낮추는 방향으로 발전<br>
+Custom Data Type을 표현하는데 사용되는데, 필드들의 집합체이며 필드들의 컨테이너<br> 
+golang은 스트럭처에 속성 + 기능(method = Function)을 가짐<br>
+관계에 따라 객체를 하나로 묶는, 관계는 기능을 정의할 수 있음<br>
+ - 구조체 = 객체 (학생 구조체&객체 = 이름, 나이, 성별)<br>
+ - 객체를 정의하고 객체간의 릴레이션쉽을  정의하는 것이 프로그래밍<br>
+<br>
+
+#### ex) 성적 처리 프로그램<br>
+ - 객체 entity : 학생, 성적, 선생님
+ - 관계 relationship : [선생님]이 [학생]의 [성적]을 "입력"한다, [학생]이 자신의 [성적]을 "조회"한다.
+ - 기능 : 입력, 조회
+
+<br>
+
+#### Method
+객체에 연결된 함수, structure가 필드만을 가지며 메서드는 별도로 분리되어 정의
+
+```
+package main
+
+import (
+	"fmt"
+)
+
+type Nums struct {
+	Pnum int
+	Snum int
+}
+
+func (n Nums) Add(Tnum int) int {	// Value Receiver
+	n.Pnum += 1
+	return n.Pnum + n.Snum + Tnum
+}
+
+func (n *Nums) Padd(Tnum int) int {	// Point Receiver
+	n.Pnum += 1
+	return n.Pnum + n.Snum + Tnum
+}
+
+func main() {
+	var n Nums
+	n.Pnum, n.Snum = 22, 11
+	Tnum := 10
+
+	fmt.Println(n.Pnum, n.Snum, Tnum, n.Pnum+n.Snum+Tnum)
+
+	Addnum := n.Add(Tnum)
+	fmt.Println(n.Pnum, n.Snum, Tnum, Addnum) // 함수의 변수 변경 내용이 메인에 영향을 주지 않음
+
+	Paddnum := n.Padd(Tnum)
+	fmt.Println(n.Pnum, n.Snum, Tnum, Paddnum) // 함수의 변수 변경 내용이 메인에 영향을 줌
+}
+```
+
+<br><br>
+
+
+
+### **assignment02** : 하단의 structure를 활용하여 학생의 성적을 입력, 수정, 삭제하는 메소드를 구현 및 실행<br>
+```
+type Student struct {
+	name  string
+	class int
+	grade GradeResult
+}
+
+type GradeResult struct {
+	name  string
+	grade string
+}
+```
+> 위 코드 작성 후 https://github.com/engineer-pjin/sre_component_foundation 레포 assignment 디렉토리에 추가 하시고 PR 요청해주시면 됩니다. (ex : assignment01_park.go)
