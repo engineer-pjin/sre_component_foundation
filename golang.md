@@ -537,3 +537,232 @@ type GradeResult struct {
 }
 ```
 > 위 코드 작성 후 https://github.com/engineer-pjin/sre_component_foundation 레포 assignment 디렉토리에 추가 하시고 PR 요청해주시면 됩니다. (ex : assignment01_park.go)
+
+
+
+<br><br>
+
+### package
+코드의 모듈화, 코드의 재사용 기능을 제공
+> **GOROOT**는 보통은 mac, linux에서 /usr/local/go에 위치하는데 Go를 설치하면 Go관련된 실행파일, SDK 등이 위치<br>
+> **GOPATH**는 커맨드라인에서 go get 명령어를 통해 받은 패키지나 라이브러리, 소스가 위치  
+
+**gopath/main.go**
+```
+import (
+	"fmt"
+	"pjin"
+)
+
+func main() {
+	fmt.Println("## golang go ##")
+	pjin.OverlapEX()
+}
+```
+<br>
+
+**gopath/src/pjin/OverlapEX.go**
+```
+package pjin
+
+import (
+	"fmt"
+)
+
+func OverlapEX() {
+	fmt.Println("## 중복 제거 ##")
+	url := []string{"uu", "vv", "cc", "dd", "ff", "vv", "cc", "dd", "ee", "aa", "ww", "gg", "hh", "vv", "cc", "ss", "ee", "cc", "uu"}
+	urlap := make(map[string]int)
+	for i := 0; i < len(url); i++ {
+		urlap[url[i]] += 1
+	}
+	fmt.Println(urlap)
+
+	fmt.Println("")
+	fmt.Println("## 정렬 ##")
+	keytemp := make([]string, len(urlap))
+	valuetemp := make([]int, len(urlap))
+	tnum := 0
+
+	for key, value := range urlap {
+		keytemp[tnum] = key
+		valuetemp[tnum] = value
+		tnum += 1
+	}
+	fmt.Println(keytemp, valuetemp)
+
+	for i := 1; i < len(urlap); i++ {
+		for j := 0; j < i; j++ {
+			if valuetemp[i] > valuetemp[j] { // 큰게 앞으로
+				//if valuetemp[i] < valuetemp[j] {	// 큰게 뒤로
+				valuetemp[i], valuetemp[j] = valuetemp[j], valuetemp[i]
+				keytemp[i], keytemp[j] = keytemp[j], keytemp[i]
+			}
+		}
+	}
+	fmt.Println(keytemp, valuetemp)
+}
+```
+
+<br><br>
+
+### goroutine
++ kernel thread - wrapping -> GO(nm) thread
++ GO thread는 cpu의 코어에 최대한 가까우도록 kernel thread를 만들고 go thread를 그 안에 넣음<br>
+ . 이로인해 context switching이 최소화 되도록 함<br>
+ . Go 런타임이 자체 관리<br>
+ . 매번 커널 쓰레드를 생성하여 수행하지 않고 고루틴이 멀티플랙스를 이용해 쓰레드에 할당<br>
+ . OS 쓰레드보다 훨씬 가볍게 비동기 Concurrent 처리를 구현하기 위하여 만든 것으로, 기본적으로 Go 런타임이 자체 관리<br>
+  
++ Go는 디폴트로 1개의 CPU를 사용한다. 즉, 여러 개의 Go 루틴을 만들더라도, 1개의 CPU에서 작업을 시분할하여 처리한다 (Concurrent 처리).<br>
+ . 만약 머신이 복수개의 CPU를 가진 경우, Go 프로그램을 다중 CPU에서 병렬처리 (Parallel 처리)하게 할 수 있는데, 병렬처리를 위해서는 runtime.GOMAXPROCS(CPU수) 함수를 호출<br> 
+
++ deadlock : lock끼리 충돌, 쓰레드간 상대방이 lock을 풀어줘야 내가 lock을 잡는데 서로 상대방 락을 계속 대기상태<br>
+  . 철학자들의 식사시간, 간헐적 발생으로 원인파악이 힘듬<br>
+
++ channel : 컨테이너 방식으로 쓰레드 간에 queue를 이용해 생산자-소비자 패턴 사용<br>
+ > 참조 : https://brownbears.tistory.com/315
+
+<br>
+
+**goroutine**
+```
+package main
+
+import (
+	"fmt"
+	"runtime"
+	"sync"
+)
+
+func say(s string, w *sync.WaitGroup) {
+	defer w.Done()
+	for i := 0; i < 10; i++ {
+		fmt.Println(s, "***", i)
+	}
+}
+
+func main() {
+	wait := new(sync.WaitGroup)
+	wait.Add(3)
+
+	runtime.GOMAXPROCS(3)
+
+	go say("Async1", wait)
+	go say("Async2", wait)
+	go say("Async3", wait)
+
+	wait.Wait()
+}
+```
+
+<br><br>
+
+## web framework Gin
+github : https://github.com/gin-gonic/gin<br>
+특징 : 가벼움 - 마이크로 웹 프레임워크
+
+### install
+> go version 1.11+ is required
+```
+# go get -u github.com/gin-gonic/gin
+```
+
+<br>
+
+#### example : ping/pong 
+**main.go**
+```
+# vi main.go
+package main
+
+import "github.com/gin-gonic/gin"
+
+func main() {
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run() 
+}
+
+# go run main.go
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:   export GIN_MODE=release
+ - using code:  gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /ping                     --> main.main.func1 (3 handlers)
+[GIN-debug] Environment variable PORT is undefined. Using port :8080 by default
+[GIN-debug] Listening and serving HTTP on :8080
+
+```
+> visit 0.0.0.0:8080/ping (for windows "localhost:8080/ping") on browser
+
+<br>
+
+
+#### example os command
+**main.go**
+```
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"os/exec"
+
+	"github.com/gin-gonic/gin"
+)
+
+func health(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "health ok",
+	})
+}
+
+func hostname(c *gin.Context) {
+	cmd := exec.Command("hostname")
+	stdoutStderr, _ := cmd.CombinedOutput()
+	fmt.Println(string(stdoutStderr))
+	c.JSON(200, gin.H{
+		"message": string(stdoutStderr),
+	})
+}
+
+func v2Any(c *gin.Context) {
+	buf := make([]byte, 1024)
+	v2Method := c.Request.Method
+	n, _ := c.Request.Body.Read(buf)
+	c.JSON(http.StatusOK, gin.H{"status": "good", "method": v2Method, "Body": string(buf[0:n])})
+}
+
+func main() {
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/health", health)
+		v1.GET("/hostname", hostname)
+	}
+
+	v2 := r.Group("/v2")
+	{
+		v2.GET("/v2Get", v2Any)
+		v2.POST("/v2Post", v2Any)
+		v2.PUT("/v2Put", v2Any)
+		v2.DELETE("/v2Delete", v2Any)
+	}
+	r.Run()
+}
+
+```
+
+### **assignment03** : Rest API 정의에 따라 GET/POST/PUT/Delete 를 통해 학생의 성적을 생성/수정/삭제/표시 하는 api를 구현(assignment02 로직 활용) <br>
