@@ -81,8 +81,9 @@ pipelining = True
 ## 실습
 > **ansible directory 구성 요소**<br>
 >> ansible.cfg : 지역 설정<br>
->> group_vars/all.yml : 그룹 변수 <br>
->> handlers/all.yml : handlers 설정 <br>
+>> host_vars/*.yml : host 변수 <br>
+>> group_vars/*.yml : 그룹 변수 <br>
+>> handlers/*.yml : handlers 설정 <br>
 >> hosts/all : 호스트 리스트 <br>
 >> tasks/ : tasks 디렉토리 <br>
 >> templates. : templates 디렉토리 <br>
